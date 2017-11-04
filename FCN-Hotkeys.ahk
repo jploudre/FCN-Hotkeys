@@ -1,7 +1,7 @@
 ﻿; Setup #########################################
 
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
-#Warn  ; Enable warnings to assist with detecting common errors.
+;#Warn  ; Enable warnings to assist with detecting common errors.
 SendMode Input  ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 CoordMode, Mouse, Window
@@ -98,9 +98,67 @@ If WinActive("Chart -") {
 }
 return
 
-\::
-Send \
+\::PatternHotKey(".->End", "..->EndDouble")
 return
+
+End:
+IfWinActive, Update -
+{
+	gosub, EndUpdate
+	Exit
+}
+IfWinActive, End Update -
+{
+	Send !o
+	Exit
+}
+return
+
+EndDouble:
+IfWinActive, Update -
+{
+	gosub, EndUpdate
+	WinWaitActive, End Update -, , 5
+	if (ErrorLevel = 0) {
+		Send !n
+		WinWaitActive, New Routing Information, , 3
+		if (ErrorLevel = 0) {
+			Send %YourBuddyName%{Enter}
+			Sleep, 100
+
+			WinWaitActive, End Update -, , 3
+			if (ErrorLevel =0) {
+				Send !o
+				WinWaitActive, Chart -, , 15
+				if (ErrorLevel = 0) {
+					Sleep, 100
+					If (ImageMouseMove("chart-desktop")) {
+						Click
+						Exit
+					}
+				}
+			}
+		}
+	}
+	*/
+} else {
+	return
+}
+return
+
+EndUpdate:
+Send ^e
+WinWaitActive, End Update, , 3
+; Sometimes Fails, Try a few times?
+if (ErrorLevel = 1) {
+	Send ^e
+	WinWaitActive, End Update, , 2
+	if (ErrorLevel = 1) {
+		Send ^e
+	}
+}
+return
+
 
 #c::
 
