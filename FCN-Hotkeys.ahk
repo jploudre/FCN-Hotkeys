@@ -346,11 +346,3 @@ ImageMouseMove(imagename, x1:=-2000, y1:=-2000, x2:=0, y2:=0){
         return 0
     }
 }
-
-; Accepts click coordinates based on normal 100% scaling of 96 DPI. Scales for Windows Display Scaling)
-scaledclick(x, y){
-    CurrentDPI := A_ScreenDPI
-    scaledx := floor(x * CurrentDPI/96)
-    scaldey := floor(y * CurrentDPI/96)
-    Click, scaledx, scaledx
-}
