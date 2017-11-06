@@ -102,14 +102,14 @@ return
 return
 
 End:
-IfWinActive, Update -
-{
-	gosub, EndUpdate
-	Exit
-}
 IfWinActive, End Update -
 {
 	Send !o
+	Exit
+}
+IfWinActive, Update -
+{
+	gosub, EndUpdate
 	Exit
 }
 return
@@ -120,28 +120,14 @@ IfWinActive, Update -
 	gosub, EndUpdate
 	WinWaitActive, End Update -, , 5
 	if (ErrorLevel = 0) {
-		Send !n
-		WinWaitActive, New Routing Information, , 3
-		if (ErrorLevel = 0) {
-			Send %YourBuddyName%{Enter}
-			Sleep, 100
-
-			WinWaitActive, End Update -, , 3
-			if (ErrorLevel =0) {
-				Send !o
-				WinWaitActive, Chart -, , 15
-				if (ErrorLevel = 0) {
-					Sleep, 100
-					If (ImageMouseMove("chart-desktop")) {
-						Click
-						Exit
-					}
-				}
-			}
-		}
+        gosub, SendtoBuddy
 	}
-	*/
-} else {
+} 
+IfWinActive, End Update -
+{
+    gosub, SendtoBuddy
+}    
+else {
 	return
 }
 return
@@ -159,6 +145,28 @@ if (ErrorLevel = 1) {
 }
 return
 
+SendtoBuddy:
+Send !n
+WinWaitActive, New Routing Information, , 3
+if (ErrorLevel = 0) {
+    Send %YourBuddyName%
+    Sleep, 100
+    ; Citrix loses window focus so use tab to go through controls. 
+    Send {Enter}{Tab 9}{Enter}
+    WinWaitActive, End Update -, , 3
+    if (ErrorLevel =0) {
+        Send !o
+        WinWaitActive, Chart -, , 15
+        if (ErrorLevel = 0) {
+            Sleep, 100
+            If (ImageMouseMove("chart-desktop")) {
+                Click
+                Exit
+            }
+        }
+    }
+}
+return
 
 #c::
 
@@ -171,6 +179,10 @@ return
 ;Space::
 ;Send {Space}
 ;return
+
+~::
+scaledclick(100, 200)
+return
 
 ; Functions #########################################
 
@@ -333,4 +345,12 @@ ImageMouseMove(imagename, x1:=-2000, y1:=-2000, x2:=0, y2:=0){
     if (ErrorLevel = 1) {
         return 0
     }
+}
+
+; Accepts click coordinates based on normal 100% scaling of 96 DPI. Scales for Windows Display Scaling)
+scaledclick(x, y){
+    CurrentDPI := A_ScreenDPI
+    scaledx := floor(x * CurrentDPI/96)
+    scaldey := floor(y * CurrentDPI/96)
+    Click, scaledx, scaledx
 }
