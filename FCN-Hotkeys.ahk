@@ -158,7 +158,7 @@ if (ErrorLevel = 0) {
         Send !o
         WinWaitActive, Chart -, , 15
         if (ErrorLevel = 0) {
-            Sleep, 100
+            Sleep, 1000
             If (ImageMouseMove("chart-desktop")) {
                 Click
                 Exit
