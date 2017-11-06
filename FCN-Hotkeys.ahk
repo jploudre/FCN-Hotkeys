@@ -35,10 +35,7 @@ MsgBox, 64, Thanks,
 (
 If this is your first time:
     
-
    - Did you get some stickers for your keyboard?
-
-
 
 )
 
@@ -180,25 +177,11 @@ return
 ;Send {Space}
 ;return
 
-~::
-scaledclick(100, 200)
-return
-
 ; Functions #########################################
-
 ; http://www.autohotkey.com/board/topic/66855-patternhotkey-map-shortlong-keypress-patterns-to-anything/?hl=%2Bpatternhotkey
-; Usage : hotkey::PatternHotKey("command1", ["command2", "command3", length(integer), period(float)])
-;     where commands match one of the following formats:
-;         "pattern:keys"                  ; Maps pattern to send keys
 ;         "pattern->label"                ; Maps pattern to label (GoSub)
-;         "pattern->function()"           ; Maps pattern to function myfunction with
-;                                           no parameter
-;         "pattern->function(value)"      ; Maps pattern to function myfunction with
-;                                           the first parameter equal to 'value'
 ;         and patterns match the following formats:
 ;             '.' or '0' represents a short press
-;             '-' or '_' represents a long press of any length
-;             '?' represents any press
 PatternHotKey(arguments*)
 {
     period = 0.2
@@ -323,7 +306,6 @@ KeyPressPattern(length = 2, period = 0.2)
 ; If found, moves mouse, returns boolean.
 ; Currently searches all screen (not window)
 ; TODO: Search others besides 100% Screen Magnification
-
 ImageMouseMove(imagename, x1:=-2000, y1:=-2000, x2:=0, y2:=0){
     CoordMode, Pixel, Screen
     CoordMode, Mouse, Screen
