@@ -177,8 +177,35 @@ return
 
 return
 
+; Sign, back to Desktop. Not for anything that needs to be routed.
 #s::
+IfWinActive, End Update -
+{
+    gosub, SignUpdateBackToDesktop
+    Exit
+}
+IfWinActive, Update -
+{
+	gosub, EndUpdate
+    gosub, SignUpdateBackToDesktop
+	Exit
+}
+return
 
+SignUpdateBackToDesktop:
+Send !m
+Send !m
+Send !m
+Send !m
+Send !s
+WinWaitActive, Chart -, , 15
+if (ErrorLevel = 0) {
+    Sleep, 1000
+    If (ImageMouseMove("chart-desktop")) {
+        Click
+        Exit
+    }
+}
 return
 
 ;Space::
