@@ -109,6 +109,14 @@ IfWinActive, Update -
 	gosub, EndUpdate
 	Exit
 }
+IfWinActive, Centricity Practice Solution Browser
+{
+    Send !{F4}
+}
+IfWinActive, Route Document -
+{
+    Send !r
+}   
 return
 
 EndDouble:
