@@ -11,11 +11,11 @@ SetKeyDelay, 30
 FirstRun()
 IniRead, Buddy, Settings.ini, Preferences, Buddy
 YourBuddyName = %Buddy%
-RWin::return
-LWin::return
 Menu, Tray, NoStandard
 Menu, Tray, Add, Reload, ReloadScript
 Menu, Tray, Add, Exit, ExitScript
+RWin::return ; Most users don't use Win key to open Start Menu
+LWin::return
 return
 
 FirstRun(){
@@ -56,42 +56,38 @@ Return
 `::
 If WinActive("Update -") {
 	WinActivate, Chart
-	Exit
 }
-If WinActive("Chart Desktop -") {
-	IfWinExist, Update 
-	{
+else If WinActive("Chart Desktop -") {
+	If WinExist("Update -") { 
 		WinActivate, Update
-		Exit
-	}
-	IfWinNotExist, Update 
-	{
+	} else {
 		If (ImageMouseMove("chart")) {
 			Click
-			Exit
 		}
 	}
-}
-If WinActive("Chart -") {
-	IfWinExist, Update 
-	{
+} 
+else If WinActive("Chart -") {
+	If WinExist("Update -") { 
 		WinActivate, Update
-		Exit
-	}
-	IfWinNotExist, Update 
-	{
+	} else {
 		If (ImageMouseMove("chart-desktop")) {
 			Click
-			Exit
 		}
 	}
-} else {
-	ifWinExist, Update -
-		WinActivate, Update -
-	ifWinExist, Chart Desktop -
-		WinActivate, Chart Desktop -
-	IfWinExist, Chart -
-		WinActivate, Chart -
+} 
+else {
+    If WinExist("Update -") {
+        WinActivate, Update -
+        Exit
+    }
+	If WinExist("Chart -") {
+        WinActivate, Chart -
+        Exit
+    }
+	If WinExist("Chart Desktop -") {
+        WinActivate, Chart Desktop -
+        Exit
+    }
 }
 return
 
