@@ -95,39 +95,34 @@ return
 return
 
 End:
-IfWinActive, End Update -
-{
+If WinActive("End Update -") {
 	Send !o
-	Exit
 }
-IfWinActive, Update -
-{
+else If WinActive("Update -") {
 	gosub, EndUpdate
-	Exit
 }
-IfWinActive, Centricity Practice Solution Browser
-{
+else If WinActive("Centricity Practice Solution Browser") {
     Send !{F4}
 }
-IfWinActive, Route Document -
-{
+else If WinActive("Route Document -") {
     Send !r
-}   
+}
+else {
+    return
+}
 return
 
 EndDouble:
-IfWinActive, Update -
-{
+If WinActive("Update -") {
 	gosub, EndUpdate
 	WinWaitActive, End Update -, , 5
 	if (ErrorLevel = 0) {
         gosub, SendtoBuddy
 	}
 } 
-IfWinActive, End Update -
-{
+else If WinActive("End Update -") {
     gosub, SendtoBuddy
-}    
+}   
 else {
 	return
 }
@@ -135,8 +130,8 @@ return
 
 EndUpdate:
 Send ^e
-WinWaitActive, End Update, , 3
 ; Sometimes Fails, Try a few times?
+WinWaitActive, End Update, , 3
 if (ErrorLevel = 1) {
 	Send ^e
 	WinWaitActive, End Update, , 2
@@ -162,7 +157,6 @@ if (ErrorLevel = 0) {
             Sleep, 1000
             If (ImageMouseMove("chart-desktop")) {
                 Click
-                Exit
             }
         }
     }
