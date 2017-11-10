@@ -91,6 +91,36 @@ else {
 }
 return
 
+; Sign, back to Desktop. No Routing
+#s::
+If WinActive("End Update -") {
+    gosub, SignUpdateBackToDesktop
+}
+else If WinActive("Update -") {
+	gosub, EndUpdate
+    Sleep, 300
+    gosub, SignUpdateBackToDesktop
+}
+else {
+    return
+}
+return
+
+SignUpdateBackToDesktop:
+Send !m
+Send !m
+Send !m
+Send !m
+Send !s
+WinWaitActive, Chart -, , 15
+if (ErrorLevel = 0) {
+    Sleep, 1000
+    If (ImageMouseMove("chart-desktop")) {
+        Click
+    }
+}
+return
+
 \::PatternHotKey(".->End", "..->EndDouble")
 return
 
@@ -167,36 +197,6 @@ return
 
 return
 
-; Sign, back to Desktop. Not for anything that needs to be routed.
-#s::
-IfWinActive, End Update -
-{
-    gosub, SignUpdateBackToDesktop
-    Exit
-}
-IfWinActive, Update -
-{
-	gosub, EndUpdate
-    gosub, SignUpdateBackToDesktop
-	Exit
-}
-return
-
-SignUpdateBackToDesktop:
-Send !m
-Send !m
-Send !m
-Send !m
-Send !s
-WinWaitActive, Chart -, , 15
-if (ErrorLevel = 0) {
-    Sleep, 1000
-    If (ImageMouseMove("chart-desktop")) {
-        Click
-        Exit
-    }
-}
-return
 
 ;Space::
 ;Send {Space}
