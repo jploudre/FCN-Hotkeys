@@ -91,8 +91,8 @@ else {
 }
 return
 
-; Sign, back to Desktop. No Routing
-#s::
+; I'm Done
++Space::
 If WinActive("End Update -") {
     gosub, SignUpdateBackToDesktop
 }
@@ -100,6 +100,16 @@ else If WinActive("Update -") {
 	gosub, EndUpdate
     Sleep, 300
     gosub, SignUpdateBackToDesktop
+}
+else If WinActive("Append to Document -") {
+	Send !s
+    Sleep, 1000
+    If (ImageMouseMove("chart-desktop")) {
+        Click
+    }
+}
+else If WinActive("Care Alert Warning -") {
+	Send !c
 }
 else {
     return
@@ -184,10 +194,7 @@ if (ErrorLevel = 0) {
         Send !o
         WinWaitActive, Chart -, , 15
         if (ErrorLevel = 0) {
-            Sleep, 1000
-            If (ImageMouseMove("chart-desktop")) {
-                Click
-            }
+            
         }
     }
 }
