@@ -92,7 +92,7 @@ else {
 return
 
 ; I'm Done
-#Space::
+^Space::
 If WinActive("End Update -") {
     gosub, SignUpdateBackToDesktop
 }
@@ -202,9 +202,8 @@ return
 
 ; CPOE Button
 F10::
-#c::
-
-
+:*:`;`;::
+MsgBox Hi there
 return
 
 
