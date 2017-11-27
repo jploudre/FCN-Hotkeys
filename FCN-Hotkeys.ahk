@@ -200,11 +200,62 @@ if (ErrorLevel = 0) {
 }
 return
 
-; CPOE Button
-F10::
-:*:`;`;::
-MsgBox Hi there
+#IfWinActive, Chart Desktop - ;###########################################################
+
+c::
+If (ImageMouseMove("append")) {
+    Click
+    CreateCPOEAppend()
+}
+
 return
+
+#IfWinActive, Chart - ;###########################################################
+
+c::
+If (ImageMouseMove("append-chart")) {
+    Click
+    CreateCPOEAppend()
+}
+
+#IfWinActive, Centricity Practice Solution Browser: ;###########################################################
+
+c::
+Send !{F4}
+Sleep, 400
+IfWinExist, Chart Desktop -
+    WinActivate, Chart Desktop -
+IfWinExist, Chart -
+    WinActivate, Chart -
+Sleep, 200
+If (ImageMouseMove("append")) {
+    Click
+    CreateCPOEAppend()
+}
+if (imageMouseMove("append-chart")) {
+    Click
+    CreateCPOEAppend()
+}
+
+#IfWinActive
+
+CreateCPOEAppend(){
+WinWaitActive, Append to, , 3
+    if (ErrorLevel = 0) {
+        Sleep, 200
+        Send !F
+        WinWaitActive, Append Document, , 5
+        if (ErrorLevel = 0) {
+            Sleep, 200
+            Send CPOE{Enter}
+            WinWaitActive, Update, , 5
+            if (ErrorLevel = 0) {
+                Sleep, 200
+                Send +{F8}
+            }
+        }
+    }
+}
 
 
 ;Space::
