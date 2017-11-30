@@ -244,13 +244,13 @@ if (imageMouseMove("append-chart")) {
 CreateCPOEAppend(){
 WinWaitActive, Append to, , 3
     if (ErrorLevel = 0) {
-        Sleep, 200
+        Sleep, 500
         Send !F
         WinWaitActive, Append Document, , 5
         if (ErrorLevel = 0) {
-            Sleep, 200
+            Sleep, 500
             Send CPOE{Enter}
-            WinWaitActive, Update, , 5
+            WinWaitActive, Update, , 15
             if (ErrorLevel = 0) {
                 Sleep, 1000
                 Send +{F8}
