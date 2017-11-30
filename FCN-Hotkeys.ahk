@@ -251,10 +251,6 @@ WinWaitActive, Append to, , 3
             Sleep, 500
             Send CPOE{Enter}
             WinWaitActive, Update, , 15
-            if (ErrorLevel = 0) {
-                Sleep, 1000
-                Send +{F8}
-            }
         }
     }
 }
