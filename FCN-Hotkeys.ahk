@@ -194,7 +194,9 @@ if (ErrorLevel = 0) {
         Send !o
         WinWaitActive, Chart -, , 15
         if (ErrorLevel = 0) {
-            
+            If (ImageMouseMove("chart-desktop")) {
+			Click
+		}
         }
     }
 }
@@ -250,7 +252,7 @@ WinWaitActive, Append to, , 3
             Send CPOE{Enter}
             WinWaitActive, Update, , 5
             if (ErrorLevel = 0) {
-                Sleep, 200
+                Sleep, 1000
                 Send +{F8}
             }
         }
