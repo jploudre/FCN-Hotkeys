@@ -206,6 +206,7 @@ return
 
 c::
 If (ImageMouseMove("append")) {
+    Keywait, c
     Click
     CreateCPOEAppend()
 }
@@ -216,6 +217,7 @@ return
 
 c::
 If (ImageMouseMove("append-chart")) {
+    Keywait, c
     Click
     CreateCPOEAppend()
 }
@@ -223,6 +225,7 @@ If (ImageMouseMove("append-chart")) {
 #IfWinActive, Centricity Practice Solution Browser: ;###########################################################
 
 c::
+Keywait, c
 Send !{F4}
 Sleep, 400
 IfWinExist, Chart Desktop -
@@ -246,15 +249,20 @@ WinWaitActive, Append to, , 3
     if (ErrorLevel = 0) {
         Sleep, 500
         Send !F
-        WinWaitActive, Append Document, , 5
+        WinWaitActive, Append Document, , 7
         if (ErrorLevel = 0) {
-            Sleep, 500
-            Send CPOE{Enter}
-            WinWaitActive, Update, , 15
+            Sleep, 1000
+            Send CPOE
+            Sleep, 1000
+            Send {Enter}
+            WinWaitActive, Update, , 20
+            if (ErrorLevel = 0) {
+                Sleep, 1000
+                Send +(F8}
+            }
         }
     }
 }
-
 
 ;Space::
 ;Send {Space}
