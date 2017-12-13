@@ -258,7 +258,8 @@ WinWaitActive, Append to, , 3
             WinWaitActive, Update, , 20
             if (ErrorLevel = 0) {
                 Sleep, 1000
-                Send +(F8}
+                Send +{F8}
+		Exit
             }
         }
     }
