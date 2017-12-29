@@ -195,6 +195,7 @@ if (ErrorLevel = 0) {
         WinWaitActive, Chart -, , 15
         if (ErrorLevel = 0) {
             If (ImageMouseMove("chart-desktop")) {
+	    		Sleep, 200
 			Click
 		}
         }
