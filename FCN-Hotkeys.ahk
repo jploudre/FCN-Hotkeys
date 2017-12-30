@@ -20,27 +20,26 @@ return
 
 FirstRun(){
 IfNotExist, Settings.ini
-{
-InputBox, BuddyName, Who's your Buddy?,
-(
+    {
+    InputBox, BuddyName, Who's your Buddy?,
+    (
 
-Who do you 'hold' things to most frequently
-in Centricity?
+    Who do you 'hold' things to most frequently
+    in Centricity?
 
-Typically this might be your CAs last name...
-), , 300, , , , , , 
-if (Errorlevel= 0) {
-IniWrite, %BuddyName%, Settings.ini, Preferences, Buddy
-MsgBox, 64, Thanks,
-(
-If this is your first time:
-    
-   - Did you get some stickers for your keyboard?
+    Typically this might be your CAs last name...
+    ), , 300, , , , , , 
+    if (Errorlevel= 0) {
+        IniWrite, %BuddyName%, Settings.ini, Preferences, Buddy
+        MsgBox, 64, Thanks,
+        (
+        If this is your first time:
+            
+           - Did you get some stickers for your keyboard?
 
-)
-
-}
-}
+        )
+        }
+    }
 }
 
 ExitScript:
@@ -195,9 +194,9 @@ if (ErrorLevel = 0) {
         WinWaitActive, Chart -, , 15
         if (ErrorLevel = 0) {
             If (ImageMouseMove("chart-desktop")) {
-	    		Sleep, 200
-			Click
-		}
+                Sleep, 200
+                Click
+            }
         }
     }
 }
@@ -233,7 +232,7 @@ IfWinExist, Chart Desktop -
     WinActivate, Chart Desktop -
 IfWinExist, Chart -
     WinActivate, Chart -
-Sleep, 200
+    Sleep, 200
 If (ImageMouseMove("append")) {
     Click
     CreateCPOEAppend()
