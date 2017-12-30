@@ -37,7 +37,7 @@ IfNotExist, Settings.ini
             
            - Did you get some stickers for your keyboard?
 
-        )
+        )       
         }
     }
 }
@@ -104,6 +104,7 @@ else If WinActive("Append to Document -") {
 	Send !s
     Sleep, 1000
     If (ImageMouseMove("chart-desktop")) {
+        Sleep, 150
         Click
     }
 }
@@ -125,6 +126,7 @@ WinWaitActive, Chart -, , 15
 if (ErrorLevel = 0) {
     Sleep, 1000
     If (ImageMouseMove("chart-desktop")) {
+        Sleep, 150
         Click
     }
 }
