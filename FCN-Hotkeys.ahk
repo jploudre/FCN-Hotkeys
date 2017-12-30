@@ -212,7 +212,9 @@ If (ImageMouseMove("append")) {
     Click
     CreateCPOEAppend()
 }
+return
 
+Space::PatternHotKey(".->Chart-Desktop-Open", "..->Chart-Desktop-Sign")
 return
 
 #IfWinActive, Chart - ;###########################################################
@@ -223,6 +225,8 @@ If (ImageMouseMove("append-chart")) {
     Click
     CreateCPOEAppend()
 }
+
+Space::PatternHotKey(".->Chart-Open", "..->Chart-Sign")
 
 #IfWinActive, Centricity Practice Solution Browser: ;###########################################################
 
@@ -243,6 +247,7 @@ if (imageMouseMove("append-chart")) {
     Click
     CreateCPOEAppend()
 }
+return
 
 #IfWinActive
 
@@ -267,9 +272,25 @@ WinWaitActive, Append to, , 3
     }
 }
 
-;Space::
-;Send {Space}
-;return
+Chart-Desktop-Open:
+If (ImageMouseMove("paperclip-selected")) {
+    Click
+    sleep, 50
+    If (ImageMouseMove("paperclip-button")) {
+        Click
+    }
+}
+return
+
+Chart-Desktop-Sign:
+If (ImageMouseMove("paperclip-selected")) {
+    Click
+    sleep, 50
+    Send ^s
+}
+return
+
+
 
 ; Functions #########################################
 ; http://www.autohotkey.com/board/topic/66855-patternhotkey-map-shortlong-keypress-patterns-to-anything/?hl=%2Bpatternhotkey
@@ -400,6 +421,7 @@ KeyPressPattern(length = 2, period = 0.2)
 ; If found, moves mouse, returns boolean.
 ; Currently searches all screen (not window)
 ; TODO: Search others besides 100% Screen Magnification
+
 ImageMouseMove(imagename, x1:=-2000, y1:=-2000, x2:=0, y2:=0){
     CoordMode, Pixel, Screen
     CoordMode, Mouse, Screen
