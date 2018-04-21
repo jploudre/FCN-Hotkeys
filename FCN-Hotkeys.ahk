@@ -249,6 +249,24 @@ if (imageMouseMove("append-chart")) {
 }
 return
 
+#IfWinActive, Update - ;###########################################################
+
+F1::PatternHotKey(".->OrderSearch")
+F2::PatternHotKey(".->UpdateMeds", "..->MedSearch")
+F3::PatternHotKey(".->UpdateProblems", "..->ProblemSearch")
+
+#IfWinActive, Update Problems - ;###########################################################
+
+F3::
+Send !n
+return
+
+#IfWinActive, Update Medications - ;###########################################################
+
+F2::PatternHotKey(".->UpdateMedSearch")
+
+#IfWinActive, Update Orders - ;###########################################################
+
 #IfWinActive
 
 CreateCPOEAppend(){
@@ -290,6 +308,60 @@ If (ImageMouseMove("paperclip-selected")) {
 }
 return
 
+CitrixSleep(){
+Sleep, 150
+}
+return
+
+OrderSearch:
+Click, 254, 38
+WinWaitActive, Update Orders, , 3
+if (ErrorLevel = 0) {
+    CitrixSleep()
+    Click, 263, 269
+    CitrixSleep()
+    Click 406, 313
+}
+return
+
+MedSearch:
+Click, 350, 38
+WinWaitActive, Update Medications, , 3
+if (ErrorLevel = 0) {
+	GoSub, UpdateMedSearch
+}
+return
+
+UpdateMedSearch:
+CitrixSleep()
+Send !n
+WinWaitActive, New Medication, , 3
+if (ErrorLevel = 0) {
+	CitrixSleep()
+	Click, 712, 65
+	WinWaitActive, Find Medication, , 5
+	If (ErrorLevel = 1) {
+	exit
+	}
+}
+return
+
+UpdateMeds:
+Click, 350, 38
+return
+
+ProblemSearch:
+Click, 428, 38
+WinWaitActive, Update Problems, , 3
+if (ErrorLevel = 0) {
+	CitrixSleep()
+	Send !n
+}
+return
+
+UpdateProblems:
+Click, 428, 38
+return
 
 
 ; Functions #########################################
