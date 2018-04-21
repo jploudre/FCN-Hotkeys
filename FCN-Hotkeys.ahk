@@ -206,6 +206,7 @@ return
 
 #IfWinActive, Chart Desktop - ;###########################################################
 
+; CPOE Append
 c::
 If (ImageMouseMove("append")) {
     Keywait, c
@@ -225,6 +226,35 @@ If (ImageMouseMove("append-chart")) {
     Click
     CreateCPOEAppend()
 }
+
+; Blank Letter
+l::
+Send ^p
+WinWaitActive, Print, , 5
+if (ErrorLevel = 0) {
+    CitrixSleep()
+	CitrixSleep()
+    Send l
+    CitrixSleep()
+	CitrixSleep()
+    Send {Down 2}
+    CitrixSleep()
+	CitrixSleep()
+    Send {Right 2}
+    CitrixSleep()
+	CitrixSleep()
+    Send l
+    CitrixSleep()
+	CitrixSleep()
+    Send {Down 2}
+    Click, 241, 59
+    Send B
+    CitrixSleep()
+	CitrixSleep()
+    Click, 392, 351
+}
+return
+
 
 Space::PatternHotKey(".->Chart-Open", "..->Chart-Sign")
 
@@ -266,6 +296,32 @@ return
 F2::PatternHotKey(".->UpdateMedSearch")
 
 #IfWinActive, Update Orders - ;###########################################################
+
+#ifWinActive, Customize Letter ;###########################################################
+
+;; * **Window-Space:** Print and Save Letter
+#Space::
+Send !p
+WinWaitNotActive, Customize Letter, , 10
+if (ErrorLevel = 0) {
+    CitrixSleep()
+    WinWaitActive, Customize Letter, , 30
+    if (ErrorLevel = 0) {
+        Citrixsleep()
+        Send !s
+        WinWaitActive, Route Document, , 30
+        if (ErrorLevel = 0) {
+            Citrixsleep()
+            Send !s
+            WinWaitActive, Print, , 30
+            if (ErrorLevel = 0) {
+                Citrixsleep()
+                Click 568, 355
+            }
+        }
+    }
+}
+return
 
 #IfWinActive
 
