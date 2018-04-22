@@ -111,6 +111,12 @@ else If WinActive("Append to Document -") {
 else If WinActive("Care Alert Warning -") {
 	Send !c
 }
+else If WinActive("Update Problems -") {
+	Click, 890, 580
+}
+else If WinActive("Update Medications -") {
+	Click, 558, 543
+}
 else {
     return
 }
@@ -291,9 +297,45 @@ F3::
 Send !n
 return
 
+;; * Right-click problem to remove. 
+RButton::
+MouseGetPos, xpos, ypos
+; Problems
+if ( 19 < xpos AND xpos < 995 AND 86 < ypos AND ypos < 232)
+    {
+    ; Click then Edit
+    Click %xpos%, %ypos%
+    Citrixsleep()
+    Send !r
+	CitrixSleep()
+	Send {Enter}
+    }
+else
+    {
+    Click    
+    }
+return
+
 #IfWinActive, Update Medications - ;###########################################################
 
 F2::PatternHotKey(".->UpdateMedSearch")
+
+;; * Right-click medication to remove.
+RButton::
+MouseGetPos, xpos, ypos
+if ( 19 < xpos AND xpos < 793 AND 75 < ypos AND ypos < 250)
+    {
+    Click %xpos%, %ypos%
+    Citrixsleep()
+    Send !r
+	CitrixSleep()
+	Send {Enter}
+    }
+else    
+    {
+    Click    
+    }
+return
 
 #IfWinActive, Update Orders - ;###########################################################
 
