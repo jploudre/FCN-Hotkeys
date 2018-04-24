@@ -266,6 +266,8 @@ Space::PatternHotKey(".->Chart-Open", "..->Chart-Sign")
 
 #IfWinActive, Centricity Practice Solution Browser: ;###########################################################
 
+Space::F2::PatternHotKey(".->BrowserPageDown", "..->BrowserCloseandSign")
+
 c::
 Keywait, c
 Send !{F4}
@@ -366,6 +368,17 @@ if (ErrorLevel = 0) {
 return
 
 #IfWinActive
+
+BrowserPageDown:
+WinGetPos , , , WinWidth, WinHeight, A
+xclick = WinWidth - 18
+yclick = WinHeight -30
+Click, xclick, yclick
+return
+
+BrowserCloseandSign:
+
+return
 
 CreateCPOEAppend(){
 WinWaitActive, Append to, , 3
