@@ -266,7 +266,7 @@ Space::PatternHotKey(".->Chart-Open", "..->Chart-Sign")
 
 #IfWinActive, Centricity Practice Solution Browser: ;###########################################################
 
-Space::F2::PatternHotKey(".->BrowserPageDown", "..->BrowserCloseandSign")
+Space::PatternHotKey(".->BrowserPageDown", "..->BrowserCloseandSign")
 
 c::
 Keywait, c
