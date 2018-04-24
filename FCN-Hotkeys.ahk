@@ -380,7 +380,7 @@ WinWaitActive, Append to, , 3
             Send {Enter}
             WinWaitActive, Update, , 20
             if (ErrorLevel = 0) {
-                Sleep, 2000
+                Sleep, 1000
                 Send {F8}
 		Exit
             }
