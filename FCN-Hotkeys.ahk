@@ -369,25 +369,6 @@ return
 
 #IfWinActive
 
- WinWaitActive, Customize Letter, , 30    if (ErrorLevel = 0) {
-        Citrixsleep()
-        Send !s
-        WinWaitActive, Route Document, , 30
-        if (ErrorLevel = 0) {
-            Citrixsleep()
-            Send !s
-            WinWaitActive, Print, , 30
-            if (ErrorLevel = 0) {
-                Citrixsleep()
-                Click 568, 355
-            }
-        }
-    }
-}
-return
-
-#IfWinActive
-
 BrowserPageDown:
 WinGetPos , , , WinWidth, WinHeight, A
 xclick := WinWidth - 18
