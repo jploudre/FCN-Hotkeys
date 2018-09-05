@@ -296,31 +296,35 @@ F2::PatternHotKey(".->UpdateMeds", "..->MedSearch")
 F3::PatternHotKey(".->UpdateProblems", "..->ProblemSearch")
 
 Rbutton::
-microphone_status := ""
 ImagePathandName := ".\files\dragon-off.png"
-    ImageSearch, FoundX, FoundY, x1, y1, %A_ScreenWidth%, %A_ScreenHeight%, *n10 %ImagePathandName%
+ImageSearch, FoundX, FoundY, 0, 0, %A_ScreenWidth%, %A_ScreenHeight%, %ImagePathandName%
+if (ErrorLevel = 0) {
+	microphone_status := ".\files\dmo-microphone-on.BMP"
+	MouseGetPos, mousex, mousey
+	Splashimage, %microphone_status%, B x%mousex% y%mousey% 
+	Send !z
+	sleep, 500
+	Click, Left
+	Splashimage, off
+	exit
+} if (ErrorLevel = 1) {
+	ImagePathandName := ".\files\dragon-on.png"
+	    ImageSearch, FoundX, FoundY, 0, 0, %A_ScreenWidth%, %A_ScreenHeight%, %ImagePathandName%
     if (ErrorLevel = 0) {
 	microphone_status := ".\files\dmo-microphone-on.BMP"
-    }
-
-ImagePathandName := ".\files\dragon-on.png"
-    ImageSearch, FoundX, FoundY, x1, y1, %A_ScreenWidth%, %A_ScreenHeight%, *n10 %ImagePathandName%
-
-    if (ErrorLevel = 0) {
-	microphone_status := ".\files\dmo-microphone-off.BMP"
-    }
-if (microphone_status != "") {
-MouseGetPos, mousex, mousey
-Splashimage, %microphone_status%, B x%mousex% y%mousey% 
-}
-Send !z
-sleep 100
-Click, Left
+	MouseGetPos, mousex, mousey
+	Splashimage, %microphone_status%, B x%mousex% y%mousey% 
+	Send !z
+	sleep, 500
+	Send !z
+	sleep, 100
+	Click, Left
+	sleep, 100
+	Splashimage, off
+	exit
+    }}
 return
 
-Rbutton up::
-Splashimage, off
-return
 #IfWinActive, Update Problems - ;###########################################################
 
 F3::
