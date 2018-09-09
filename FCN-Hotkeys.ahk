@@ -662,3 +662,5 @@ ImageMouseMove(imagename, x1:=-2000, y1:=-2000, x2:=0, y2:=0){
         return 0
     }
 }
+
+
