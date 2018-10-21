@@ -8,14 +8,28 @@ CoordMode, Mouse, Window
 #Persistent
 SetKeyDelay, 30
 
+Menu, Tray, NoStandard
+Menu, Tray, Add, Reload, ReloadScript
+Menu, Tray, Add, Exit, ExitScript
+
+return
+
+ExitScript:
+ExitApp
+return
+
+ReloadScript:
+Reload
+Return
+
 ; Hotkeys #########################################
 
-`::
-If WinActive("Update -") {
+~`::
+If WinActive("Update") {
 	WinActivate, Chart
 }
-else If WinActive("Chart Desktop -") {
-	If WinExist("Update -") { 
+else If WinActive("Chart Desktop") {
+	If WinExist("Update") { 
 		WinActivate, Update
 	} else {
 		If (ImageMouseMove("chart")) {
@@ -23,8 +37,8 @@ else If WinActive("Chart Desktop -") {
 		}
 	}
 } 
-else If WinActive("Chart -") {
-	If WinExist("Update -") { 
+else If WinActive("Chart") {
+	If WinExist("Update") { 
 		WinActivate, Update
 	} else {
 		If (ImageMouseMove("chart-desktop")) {
@@ -33,20 +47,160 @@ else If WinActive("Chart -") {
 	}
 } 
 else {
-    If WinExist("Update -") {
-        WinActivate, Update -
+    If WinExist("Update") {
+        WinActivate, Update
         Exit
     }
-	If WinExist("Chart -") {
-        WinActivate, Chart -
+	If WinExist("Chart") {
+        WinActivate, Chart
         Exit
     }
-	If WinExist("Chart Desktop -") {
-        WinActivate, Chart Desktop -
+	If WinExist("Chart Desktop") {
+        WinActivate, Chart Desktop
         Exit
     }
 }
 return
+
+~c::
+if WinActive("Chart Desktop"){
+	If (ImageMouseMove("append")) {
+    	Keywait, c
+    	Click
+    	CreateCPOEAppend()
+    	exit
+	}
+
+} else if WinActive("Chart"){
+	If (ImageMouseMove("append-chart")) {
+    	Keywait, c
+    	Click
+    	CreateCPOEAppend()
+    	exit
+	}
+} else if WinActive("Centricity Practice Solution Browser"){
+	Keywait, c
+	Send !{F4}
+	Sleep, 200
+	IfWinExist, Chart Desktop
+    WinActivate, Chart Desktop
+	IfWinExist, Chart
+    WinActivate, Chart
+    Sleep, 200
+	If (ImageMouseMove("append")) {
+    	Click
+    	CreateCPOEAppend()
+	}
+	if (imageMouseMove("append-chart")) {
+    	Click
+    	CreateCPOEAppend()
+	}
+return
+}
+return
+
+; I'm Done
+^Space::
+If WinActive("End Update") {
+    gosub, SignUpdateBackToDesktop
+}
+else If WinActive("Append to Document") {
+	Send !s
+    Sleep, 1000
+    If (ImageMouseMove("chart-desktop")) {
+        Click
+    }
+}
+else If WinActive("Care Alert Warning") {
+	Send !c
+}
+else If WinActive("Update Problems") {
+	Click, 890, 580
+}
+else If WinActive("Update Medications") {
+	Click, 558, 543
+}
+else If WinActive("Update Orders") {
+	Click, 670, 639
+}
+else If WinActive("Update") {
+	gosub, EndUpdate
+    gosub, SignUpdateBackToDesktop
+}
+else If WinActive("Customize Letter") {
+	Send !p
+	WinWaitNotActive, Customize Letter, , 10
+	if (ErrorLevel = 0) {
+    	Sleep, 100
+    	WinWaitActive, Customize Letter, , 30
+    	if (ErrorLevel = 0) {
+        	Sleep, 100
+        	Send !s
+        	WinWaitActive, Route Document, , 30
+        	if (ErrorLevel = 0) {
+            	Sleep, 100
+            	Send !s
+            	WinWaitActive, Print, , 30
+            	if (ErrorLevel = 0) {
+                	Sleep, 100
+                	Click 568, 355
+            	}	
+        	}
+        }
+    }
+}
+else {
+    return
+}
+return
+
+SignUpdateBackToDesktop:
+Send !m
+Send !m
+Send !m
+Send !m
+Send !s
+WinWaitActive, Chart, , 15
+if (ErrorLevel = 0) {
+    Sleep, 500
+    If (ImageMouseMove("chart-desktop")) {
+        Click
+    }
+}
+return
+
+EndUpdate:
+Send ^e
+; Sometimes Fails, Try a few times?
+WinWaitActive, End Update, , 3
+if (ErrorLevel = 1) {
+	Send ^e
+	WinWaitActive, End Update, , 2
+	if (ErrorLevel = 1) {
+		Send ^e
+	}
+}
+sleep, 300
+return
+
+CreateCPOEAppend(){
+WinWaitActive, Append to, , 3
+    if (ErrorLevel = 0) {
+        Sleep, 100
+        Send !F
+        WinWaitActive, Append Document, , 7
+        if (ErrorLevel = 0) {
+            Sleep, 100
+            Send CPOE{Enter}
+            WinWaitActive, Update, , 20
+            if (ErrorLevel = 0) {
+                Sleep, 500
+                Send {F8}
+				Exit
+            }
+        }
+    }
+}
 
 ; Functions #########################################
 ; http://www.autohotkey.com/board/topic/66855-patternhotkey-map-shortlong-keypress-patterns-to-anything/?hl=%2Bpatternhotkey

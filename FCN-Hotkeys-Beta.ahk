@@ -53,53 +53,6 @@ Return
 ; Hotkeys #########################################
 
 
-; I'm Done
-^Space::
-If WinActive("End Update -") {
-    gosub, SignUpdateBackToDesktop
-}
-else If WinActive("Update -") {
-	gosub, EndUpdate
-    Sleep, 300
-    gosub, SignUpdateBackToDesktop
-}
-else If WinActive("Append to Document -") {
-	Send !s
-    Sleep, 1000
-    If (ImageMouseMove("chart-desktop")) {
-        Sleep, 150
-        Click
-    }
-}
-else If WinActive("Care Alert Warning -") {
-	Send !c
-}
-else If WinActive("Update Problems -") {
-	Click, 890, 580
-}
-else If WinActive("Update Medications -") {
-	Click, 558, 543
-}
-else {
-    return
-}
-return
-
-SignUpdateBackToDesktop:
-Send !m
-Send !m
-Send !m
-Send !m
-Send !s
-WinWaitActive, Chart -, , 15
-if (ErrorLevel = 0) {
-    Sleep, 1000
-    If (ImageMouseMove("chart-desktop")) {
-        Sleep, 150
-        Click
-    }
-}
-return
 
 \::PatternHotKey(".->End", "..->EndDouble")
 return
@@ -138,20 +91,7 @@ else {
 }
 return
 
-EndUpdate:
-Send ^e
-; Sometimes Fails, Try a few times?
-WinWaitActive, End Update, , 3
-if (ErrorLevel = 1) {
-	Send ^e
-	WinWaitActive, End Update, , 2
-	if (ErrorLevel = 1) {
-		Send ^e
-	}
-}
-Send {Right}
-Send +^{Left}
-return
+
 
 SendtoBuddy:
 Send !n
@@ -177,54 +117,11 @@ return
 
 #IfWinActive, Chart Desktop - ;###########################################################
 
-; CPOE Append
-c::
-If (ImageMouseMove("append")) {
-    Keywait, c
-    Click
-    CreateCPOEAppend()
-}
-return
 
 Space::PatternHotKey(".->Chart-Desktop-Open", "..->Chart-Desktop-Sign")
 return
 
 #IfWinActive, Chart - ;###########################################################
-
-c::
-If (ImageMouseMove("append-chart")) {
-    Keywait, c
-    Click
-    CreateCPOEAppend()
-}
-
-; Blank Letter
-l::
-Send ^p
-WinWaitActive, Print, , 5
-if (ErrorLevel = 0) {
-    CitrixSleep()
-	CitrixSleep()
-    Send l
-    CitrixSleep()
-	CitrixSleep()
-    Send {Down 2}
-    CitrixSleep()
-	CitrixSleep()
-    Send {Right 2}
-    CitrixSleep()
-	CitrixSleep()
-    Send l
-    CitrixSleep()
-	CitrixSleep()
-    Send {Down 2}
-    Click, 241, 59
-    Send B
-    CitrixSleep()
-	CitrixSleep()
-    Click, 392, 351
-}
-return
 
 
 Space::PatternHotKey(".->Chart-Open", "..->Chart-Sign")
@@ -233,24 +130,7 @@ Space::PatternHotKey(".->Chart-Open", "..->Chart-Sign")
 
 Space::PatternHotKey(".->BrowserPageDown", "..->BrowserCloseandSign")
 
-c::
-Keywait, c
-Send !{F4}
-Sleep, 400
-IfWinExist, Chart Desktop -
-    WinActivate, Chart Desktop -
-IfWinExist, Chart -
-    WinActivate, Chart -
-    Sleep, 200
-If (ImageMouseMove("append")) {
-    Click
-    CreateCPOEAppend()
-}
-if (imageMouseMove("append-chart")) {
-    Click
-    CreateCPOEAppend()
-}
-return
+
 
 #IfWinActive, Update - ;###########################################################
 
@@ -335,34 +215,6 @@ else
     }
 return
 
-#IfWinActive, Update Orders - ;###########################################################
-
-#ifWinActive, Customize Letter ;###########################################################
-
-;; * **Window-Space:** Print and Save Letter
-#Space::
-Send !p
-WinWaitNotActive, Customize Letter, , 10
-if (ErrorLevel = 0) {
-    CitrixSleep()
-    WinWaitActive, Customize Letter, , 30
-    if (ErrorLevel = 0) {
-        Citrixsleep()
-        Send !s
-        WinWaitActive, Route Document, , 30
-        if (ErrorLevel = 0) {
-            Citrixsleep()
-            Send !s
-            WinWaitActive, Print, , 30
-            if (ErrorLevel = 0) {
-                Citrixsleep()
-                Click 568, 355
-            }
-        }
-    }
-}
-return
-
 #IfWinActive
 
 BrowserPageDown:
@@ -378,26 +230,7 @@ BrowserCloseandSign:
 
 return
 
-CreateCPOEAppend(){
-WinWaitActive, Append to, , 3
-    if (ErrorLevel = 0) {
-        Sleep, 500
-        Send !F
-        WinWaitActive, Append Document, , 7
-        if (ErrorLevel = 0) {
-            Sleep, 1000
-            Send CPOE
-            Sleep, 1000
-            Send {Enter}
-            WinWaitActive, Update, , 20
-            if (ErrorLevel = 0) {
-                Sleep, 1000
-                Send {F8}
-		Exit
-            }
-        }
-    }
-}
+
 
 Chart-Desktop-Open:
 If (ImageMouseMove("paperclip-selected")) {
