@@ -23,13 +23,16 @@
 - [ ] In Update Orders --> Signs Orders
 - [ ] In Customize Letter --> Prints, Signs, Saves (no routing)
 - [ ] In Append to Document --> Signs, Goes to Chart Desktop
+- [ ] In Attachment --> Closes, Signs
 
-## End/Hold Key: **\** (Above the Return Key)
+## End/Hold Key: **\\** (Above the Return Key)
 
 - [ ] In Update --> End Update
 - [ ] In Update (Double)-->  End Update, Hold to your Buddy
 - [ ] In End Update --> Hold
 - [ ] In End Update (Double)--> Hold to your Buddy
+- [ ] In Attachment --> Closes
+- [ ] In Route Document --> Routes
 
 ## Orders Key: **F1**
 
@@ -39,8 +42,11 @@
 
 - [ ] In Update --> Update Medications
 - [ ] In Update (Double)--> Open Update Medications, New Medication, Reference Search
+- [ ] In Update Medications --> New Medication, Reference Search
 
 ## Problems Key: **F3**
 
 - [ ] In Update --> Update Problems
-- [ ] In Update (Double)--> Open Update Problems, New Problem, Reference Search
+- [ ] In Update (Double)--> Open Update Problems, New Problem
+- [ ] In Update Problems --> New Problem
+- [ ] In Update Orders --> New Problem
