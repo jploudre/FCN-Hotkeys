@@ -195,7 +195,21 @@ else If WinActive("Customize Letter") {
         	}
         }
     }
-}
+} else if WinActive("Centricity Practice Solution Browser"){
+	Send !{F4}
+	Sleep, 200
+	IfWinExist, Chart Desktop
+    WinActivate, Chart Desktop
+	IfWinExist, Chart
+    WinActivate, Chart
+    Sleep, 200
+	If (ImageMouseMove("sign-chart")) {
+    	Click
+	}
+	if (imageMouseMove("sign-chart-desktop")) {
+    	Click
+	}
+} 
 else {
     return
 }
