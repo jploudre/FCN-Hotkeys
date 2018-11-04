@@ -109,8 +109,9 @@ else {
 }
 return
 
-~c::
+$c::
 if WinActive("Chart Desktop"){
+    gosub, SwitchCPOEFocus
 	If (ImageMouseMove("append")) {
     	Keywait, c
     	Click
@@ -119,6 +120,7 @@ if WinActive("Chart Desktop"){
 	}
 
 } else if WinActive("Chart"){
+    gosub, SwitchCPOEFocus
 	If (ImageMouseMove("append-chart")) {
     	Keywait, c
     	Click
@@ -143,6 +145,8 @@ if WinActive("Chart Desktop"){
     	CreateCPOEAppend()
 	}
 return
+} else {
+    send c
 }
 return
 
@@ -253,6 +257,12 @@ F3::PatternHotKey(".->UpdateProblems", "..->ProblemSearch")
 
 ; Hotkey Functions #########################################
 
+SwitchCPOEFocus:
+ControlGetFocus, chartfocus
+if (chartfocus = "SysTreeView322") {
+    ControlFocus, "SftTreeControl701"
+}
+return
 
 OrderSearch:
 Click, 254, 38

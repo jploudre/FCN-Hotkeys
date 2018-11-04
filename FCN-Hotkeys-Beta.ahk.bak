@@ -35,8 +35,8 @@ IfNotExist, Z:\FCN-Macro-Settings.ini
         SplashImage, %SetWorkingDir%\files\edit-buddy-help.png, B2 ZH200 ZW-1 FM24 FS18 C0, Later look for the FCN Logo to change your buddy., Thanks!
         Sleep 8000
         SplashImage, Off
+        }
     }
-}
 }
 return
 
@@ -109,8 +109,9 @@ else {
 }
 return
 
-~c::
+$c::
 if WinActive("Chart Desktop"){
+    gosub, SwitchCPOEFocus
 	If (ImageMouseMove("append")) {
     	Keywait, c
     	Click
@@ -119,6 +120,7 @@ if WinActive("Chart Desktop"){
 	}
 
 } else if WinActive("Chart"){
+    gosub, SwitchCPOEFocus
 	If (ImageMouseMove("append-chart")) {
     	Keywait, c
     	Click
@@ -143,6 +145,8 @@ if WinActive("Chart Desktop"){
     	CreateCPOEAppend()
 	}
 return
+} else {
+    send c
 }
 return
 
@@ -195,13 +199,52 @@ else If WinActive("Customize Letter") {
         	}
         }
     }
-}
+} else if WinActive("Centricity Practice Solution Browser"){
+	Send !{F4}
+	Sleep, 200
+	IfWinExist, Chart Desktop
+    WinActivate, Chart Desktop
+	IfWinExist, Chart
+    WinActivate, Chart
+    Sleep, 200
+	If (ImageMouseMove("sign-chart")) {
+    	Click
+	}
+	if (imageMouseMove("sign-chart-desktop")) {
+    	Click
+	}
+} 
 else {
     return
 }
 return
 
-#IfWinActive Update -
+#IfWinActive, Update Med
+
+F2::
+gosub, UpdateMedSearch
+return
+
+#IfWinActive
+
+#IfWinActive, Update Prob
+
+F3::
+Send !n
+return
+
+#IfWinActive
+
+#IfWinActive, Update Orde
+
+F3::
+Click, 650, 237
+return
+
+#IfWinActive
+
+
+#IfWinActive, Update -
 
 F1::PatternHotKey(".->OrderSearch")
 F2::PatternHotKey(".->UpdateMeds", "..->MedSearch")
@@ -209,8 +252,17 @@ F3::PatternHotKey(".->UpdateProblems", "..->ProblemSearch")
 
 #IfWinActive
 
+
+
+
 ; Hotkey Functions #########################################
 
+SwitchCPOEFocus:
+ControlGetFocus, chartfocus
+if (chartfocus = "SysTreeView322") {
+    ControlFocus, "SftTreeControl701"
+}
+return
 
 OrderSearch:
 Click, 254, 38
@@ -362,7 +414,7 @@ if (ErrorLevel = 0) {
         WinWaitActive, Chart, , 15
         if (ErrorLevel = 0) {
             If (ImageMouseMove("chart-desktop")) {
-                Sleep, 500
+                Sleep, 800
                 Click
             }
         }
@@ -410,8 +462,12 @@ WinWaitActive, Append to, , 3
             Send CPOE{Enter}
             WinWaitActive, Update, , 20
             if (ErrorLevel = 0) {
-                Sleep, 500
-                Send {F8}
+                Sleep, 1000
+                Send, {F8}
+                Sleep, 1000
+                If (ImageMouseMove("CPOE-form")) {
+                    Click, 2
+                }
 				Exit
             }
         }
