@@ -452,8 +452,12 @@ WinWaitActive, Append to, , 3
             Send CPOE{Enter}
             WinWaitActive, Update, , 20
             if (ErrorLevel = 0) {
-                Sleep, 500
-                Send {F8}
+                Sleep, 1000
+                Send, {F8}
+                Sleep, 1000
+                If (ImageMouseMove("CPOE-form")) {
+                    Click, 2
+                }
 				Exit
             }
         }
