@@ -23,6 +23,7 @@
 - [ ] In Update Orders --> Signs Orders
 - [ ] In Customize Letter --> Prints, Signs, Saves (no routing)
 - [ ] In Append to Document --> Signs, Goes to Chart Desktop
+- [ ] In Attachment --> Closes, Signs
 
 ## End/Hold Key: **\\** (Above the Return Key)
 
@@ -30,6 +31,8 @@
 - [ ] In Update (Double)-->  End Update, Hold to your Buddy
 - [ ] In End Update --> Hold
 - [ ] In End Update (Double)--> Hold to your Buddy
+- [ ] In Attachment --> Closes
+- [ ] In Route Document --> Routes
 
 ## Orders Key: **F1**
 
