@@ -201,13 +201,41 @@ else {
 }
 return
 
-#IfWinActive Update -
+#IfWinActive, Update Med
+
+F2::
+gosub, UpdateMedSearch
+return
+
+#IfWinActive
+
+#IfWinActive, Update Prob
+
+F3::
+Send !n
+return
+
+#IfWinActive
+
+#IfWinActive, Update Orde
+
+F3::
+Click, 650, 237
+return
+
+#IfWinActive
+
+
+#IfWinActive, Update -
 
 F1::PatternHotKey(".->OrderSearch")
 F2::PatternHotKey(".->UpdateMeds", "..->MedSearch")
 F3::PatternHotKey(".->UpdateProblems", "..->ProblemSearch")
 
 #IfWinActive
+
+
+
 
 ; Hotkey Functions #########################################
 
@@ -362,7 +390,7 @@ if (ErrorLevel = 0) {
         WinWaitActive, Chart, , 15
         if (ErrorLevel = 0) {
             If (ImageMouseMove("chart-desktop")) {
-                Sleep, 500
+                Sleep, 800
                 Click
             }
         }
