@@ -39,8 +39,11 @@
 
 - [ ] In Update --> Update Medications
 - [ ] In Update (Double)--> Open Update Medications, New Medication, Reference Search
+- [ ] In Update Medications --> New Medication, Reference Search
 
 ## Problems Key: **F3**
 
 - [ ] In Update --> Update Problems
-- [ ] In Update (Double)--> Open Update Problems, New Problem, Reference Search
+- [ ] In Update (Double)--> Open Update Problems, New Problem
+- [ ] In Update Problems --> New Problem
+- [ ] In Update Orders --> New Problem
