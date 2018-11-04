@@ -24,7 +24,7 @@
 - [ ] In Customize Letter --> Prints, Signs, Saves (no routing)
 - [ ] In Append to Document --> Signs, Goes to Chart Desktop
 
-## End/Hold Key: **\** (Above the Return Key)
+## End/Hold Key: **\\** (Above the Return Key)
 
 - [ ] In Update --> End Update
 - [ ] In Update (Double)-->  End Update, Hold to your Buddy
