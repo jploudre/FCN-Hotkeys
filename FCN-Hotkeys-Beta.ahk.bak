@@ -14,6 +14,10 @@ Menu, Tray, Add, Exit, ExitScript
 Menu, Tray, Icon, %SetWorkingDir%\files\favicon.ico
 Menu, Tray, Default, Edit Buddy
 
+SplashImage, %SetWorkingDir%\files\FCN-macros.png,B2 FS18 C0, 
+Sleep, 700
+SplashImage, Off
+
 FirstRun()
 IniRead, Buddy, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
 YourBuddyName = %Buddy%
@@ -68,9 +72,6 @@ Return
 \::PatternHotKey(".->End", "..->EndDouble")
 return
 
-;$Space::PatternHotKey(".->SingleSpace", "..->DoubleSpace")
-;return
-
 `::
 If WinActive("Update") {
 	WinActivate, Chart
@@ -111,7 +112,7 @@ return
 
 $c::
 if WinActive("Chart Desktop"){
-    gosub, SwitchCPOEFocus
+    gosub, SwitchDocumentFocus
 	If (ImageMouseMove("append")) {
     	Keywait, c
     	Click
@@ -120,7 +121,7 @@ if WinActive("Chart Desktop"){
 	}
 
 } else if WinActive("Chart"){
-    gosub, SwitchCPOEFocus
+    gosub, SwitchDocumentFocus
 	If (ImageMouseMove("append-chart")) {
     	Keywait, c
     	Click
@@ -252,12 +253,21 @@ F3::PatternHotKey(".->UpdateProblems", "..->ProblemSearch")
 
 #IfWinActive
 
+#IfWinActive, Centricity Practice So
 
+$Space::PatternHotKey(".->SingleSpace", "..->DoubleSpace")
 
+#IfWinActive
+
+#IfWinActive, Chart Deskto
+
+$Space::PatternHotKey(".->SingleSpace", "..->DoubleSpace")
+
+#IfWinActive
 
 ; Hotkey Functions #########################################
 
-SwitchCPOEFocus:
+SwitchDocumentFocus:
 ControlGetFocus, chartfocus
 if (chartfocus = "SysTreeView322") {
     ControlFocus, "SftTreeControl701"
@@ -321,12 +331,10 @@ Sleep, 150
 return
 
 SingleSpace:
-If WinActive("Update") {
-    send {Space}
-    exit
-} else If WinActive("Centricity Practice Solution Browser") {
+If WinActive("Centricity Practice Solution Browser") {
     gosub, BrowserPageDown
 } else If WinActive("Chart Desktop") {
+    gosub, SwitchDocumentFocus
     ControlClick, Button3
 } else {
     Send {Space}
@@ -334,10 +342,6 @@ If WinActive("Update") {
 return
 
 DoubleSpace:
-If WinActive("Update") {
-    send {Space 2}
-    exit
-}
 If WinActive("Centricity Practice Solution Browser") {
     gosub, BrowserCloseandSign
 } else {
