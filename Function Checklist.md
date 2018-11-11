@@ -24,6 +24,7 @@
 - [ ] In Customize Letter --> Prints, Signs, Saves (no routing)
 - [ ] In Append to Document --> Signs, Goes to Chart Desktop
 - [ ] In Attachment --> Closes, Signs
+- [ ] In New Alert/Flag --> Sends
 
 ## End/Hold Key: **\\** (Above the Return Key)
 
