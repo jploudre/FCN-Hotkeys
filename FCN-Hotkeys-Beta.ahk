@@ -278,9 +278,9 @@ OrderSearch:
 Click, 254, 38
 WinWaitActive, Update Orders, , 3
 if (ErrorLevel = 0) {
-    CitrixSleep()
+    sleep, 150
     Click, 263, 269
-    CitrixSleep()
+    sleep, 150
     Click 406, 313
 }
 return
@@ -294,11 +294,11 @@ if (ErrorLevel = 0) {
 return
 
 UpdateMedSearch:
-CitrixSleep()
+sleep, 150
 Send !n
 WinWaitActive, New Medication, , 3
 if (ErrorLevel = 0) {
-	CitrixSleep()
+	sleep, 150
 	Click, 712, 65
 	WinWaitActive, Find Medication, , 5
 	If (ErrorLevel = 1) {
@@ -315,19 +315,13 @@ ProblemSearch:
 Click, 428, 38
 WinWaitActive, Update Problems, , 3
 if (ErrorLevel = 0) {
-	CitrixSleep()
+	sleep, 150
 	Send !n
 }
 return
 
 UpdateProblems:
 Click, 428, 38
-return
-
-
-CitrixSleep(){
-Sleep, 150
-}
 return
 
 SingleSpace:

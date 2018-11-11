@@ -334,7 +334,7 @@ SingleSpace:
 If WinActive("Centricity Practice Solution Browser") {
     gosub, BrowserPageDown
 } else If WinActive("Chart Desktop") {
-    gosub, SwitchDocumentFocus
+    ControlFocus, "SftTreeControl701"
     ControlClick, Button3
 } else {
     Send {Space}
