@@ -172,6 +172,9 @@ else If WinActive("Update Problems") {
 else If WinActive("Update Medications") {
 	Click, 558, 543
 }
+else If WinActive("New Alert/Fla") {
+	Send !s
+}
 else If WinActive("Update Orders") {
 	Click, 549, 641
 }
