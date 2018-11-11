@@ -89,9 +89,7 @@ else If WinActive("Chart") {
 	If WinExist("Update") { 
 		WinActivate, Update
 	} else {
-		If (ImageMouseMove("chart-desktop")) {
-			Click
-		}
+		Goto-Chart-Desktop()
 	}
 } 
 else {
@@ -158,10 +156,7 @@ If WinActive("End Update") {
 }
 else If WinActive("Append to Document") {
 	Send !s
-    Sleep, 100
-    If (ImageMouseMove("chart-desktop")) {
-        Click
-    }
+    Goto-Chart-Desktop()
 }
 else If WinActive("Care Alert Warning") {
 	Send !c
@@ -310,6 +305,23 @@ if (ErrorLevel = 0) {
 }
 return
 
+Goto-Chart-Desktop(){
+sleep, 150
+If (ImageMouseMove("chart-desktop")) {
+    Click
+    WinWaitActive, Chart Desktop, , 2
+    if (Errorlevel = 1) {
+        If (ImageMouseMove("chart-desktop")) {
+            Click
+        }
+    }
+} else {
+    exit
+    ; Don't want macro to continue if 
+}
+}
+return
+
 UpdateMeds:
 Click, 350, 38
 return
@@ -414,10 +426,7 @@ if (ErrorLevel = 0) {
         Send !o
         WinWaitActive, Chart, , 15
         if (ErrorLevel = 0) {
-            If (ImageMouseMove("chart-desktop")) {
-                Sleep, 800
-                Click
-            }
+            Goto-Chart-Desktop()
         }
     }
 }
@@ -431,10 +440,7 @@ Send !m
 Send !s
 WinWaitActive, Chart, , 15
 if (ErrorLevel = 0) {
-    Sleep, 500
-    If (ImageMouseMove("chart-desktop")) {
-        Click
-    }
+    Goto-Chart-Desktop()
 }
 return
 
