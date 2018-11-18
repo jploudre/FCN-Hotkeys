@@ -1,70 +1,5 @@
-; Setup #########################################
-#NoEnv
-SendMode Input
-SetWorkingDir %A_ScriptDir%
-CoordMode, Mouse, Window
-#SingleInstance force
-#Persistent
-SetKeyDelay, 30
-
-Menu, Tray, NoStandard
-Menu, Tray, Add, Edit Buddy, EditBuddy
-Menu, Tray, Add, Reload, ReloadScript
-Menu, Tray, Add, Exit, ExitScript
-Menu, Tray, Icon, %SetWorkingDir%\files\favicon.ico
-Menu, Tray, Default, Edit Buddy
-
-SplashImage, %SetWorkingDir%\files\FCN-macros.png,B2 FS18 C0, 
-Sleep, 700
-SplashImage, Off
-
-FirstRun()
-IniRead, Buddy, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
+Setup()
 return
-
-FirstRun(){
-IfNotExist, Z:\FCN-Macro-Settings.ini
-    {
-    InputBox, BuddyName, Who's your Buddy?,
-    (
-
-    Who do you 'hold' things to most frequently
-    in Centricity?
-
-    Typically this might be your CAs last name...
-    ), , 300, , , , , , 
-    if (Errorlevel= 0) {
-        IniWrite, %BuddyName%, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
-        SplashImage, %SetWorkingDir%\files\edit-buddy-help.png, B2 ZH200 ZW-1 FM24 FS18 C0, Later look for the FCN Logo to change your buddy., Thanks!
-        Sleep 8000
-        SplashImage, Off
-        }
-    }
-}
-return
-
-EditBuddy:
-IniRead, Buddy, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
-InputBox, BuddyName, Who's your Buddy?,
-    (
-
-    Who do you 'hold' things to most frequently
-    in Centricity?
-
-    Typically this might be your CAs last name...
-    ), , 300, , , , , , %Buddy%
-    if (Errorlevel= 0) {
-        IniWrite, %BuddyName%, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
-        }
-return
-
-ExitScript:
-ExitApp
-return
-
-ReloadScript:
-Reload
-Return
 
 ; Locations and Hotkeys #########################################
 
@@ -144,6 +79,75 @@ Return
 #IfWinActive
 
 ; Hotkey Functions #########################################
+
+Setup(){
+#NoEnv
+SendMode Input
+SetWorkingDir %A_ScriptDir%
+CoordMode, Mouse, Window
+#SingleInstance force
+#Persistent
+SetKeyDelay, 30
+
+Menu, Tray, NoStandard
+Menu, Tray, Add, Edit Buddy, EditBuddy
+Menu, Tray, Add, Reload, ReloadScript
+Menu, Tray, Add, Exit, ExitScript
+Menu, Tray, Icon, %SetWorkingDir%\files\favicon.ico
+Menu, Tray, Default, Edit Buddy
+
+SplashImage, %SetWorkingDir%\files\FCN-macros.png,B2 FS18 C0, 
+Sleep, 700
+SplashImage, Off
+
+FirstRun()
+IniRead, Buddy, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
+return
+}
+
+FirstRun(){
+IfNotExist, Z:\FCN-Macro-Settings.ini
+    {
+    InputBox, BuddyName, Who's your Buddy?,
+    (
+
+    Who do you 'hold' things to most frequently
+    in Centricity?
+
+    Typically this might be your CAs last name...
+    ), , 300, , , , , , 
+    if (Errorlevel= 0) {
+        IniWrite, %BuddyName%, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
+        SplashImage, %SetWorkingDir%\files\edit-buddy-help.png, B2 ZH200 ZW-1 FM24 FS18 C0, Later look for the FCN Logo to change your buddy., Thanks!
+        Sleep 8000
+        SplashImage, Off
+        }
+    }
+}
+return
+
+EditBuddy:
+IniRead, Buddy, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
+InputBox, BuddyName, Who's your Buddy?,
+    (
+
+    Who do you 'hold' things to most frequently
+    in Centricity?
+
+    Typically this might be your CAs last name...
+    ), , 300, , , , , , %Buddy%
+    if (Errorlevel= 0) {
+        IniWrite, %BuddyName%, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
+        }
+return
+
+ExitScript:
+ExitApp
+return
+
+ReloadScript:
+Reload
+Return
 
 SwitchDocumentFocus(){
     ControlGetFocus, chartfocus
