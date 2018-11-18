@@ -253,13 +253,13 @@ F3::PatternHotKey(".->UpdateProblems()", "..->ProblemSearch()")
 
 #IfWinActive, Centricity Practice So
 
-#$Space::PatternHotKey(".->SingleSpace()", "..->DoubleSpace()")
+$Space::PatternHotKey(".->SingleSpace()", "..->DoubleSpace()")
 
 #IfWinActive
 
 #IfWinActive, Chart Deskto
 
-#$Space::PatternHotKey(".->SingleSpace()", "..->DoubleSpace()")
+$Space::PatternHotKey(".->SingleSpace()", "..->DoubleSpace()")
 
 #IfWinActive
 
