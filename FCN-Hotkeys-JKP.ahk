@@ -248,13 +248,19 @@ AttachmentSign(){
 }
 
 GoChartDesktop(){
-    sleep, 150
+    sleep, 500
     If (ImageMouseMove("chart-desktop")) {
         Click
-        WinWaitActive, Chart Desktop, , 2
+        WinWaitActive, Chart Desktop, , 1
         if (Errorlevel = 1) {
             If (ImageMouseMove("chart-desktop")) {
                 Click
+                WinWaitActive, Chart Desktop, , 1
+                if (Errorlevel = 1) {
+                    If (ImageMouseMove("chart-desktop")) {
+                        Click
+                    }
+                }
             }
         }
     } else {
