@@ -20,7 +20,6 @@ SplashImage, Off
 
 FirstRun()
 IniRead, Buddy, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
-YourBuddyName = %Buddy%
 return
 
 FirstRun(){
@@ -67,394 +66,343 @@ ReloadScript:
 Reload
 Return
 
-; Hotkey Logic #########################################
-
-\::PatternHotKey(".->End", "..->EndDouble")
-return
-
-`::
-If WinActive("Update") {
-	WinActivate, Chart
-}
-else If WinActive("Chart Desktop") {
-	If WinExist("Update") { 
-		WinActivate, Update
-	} else {
-		If (ImageMouseMove("chart")) {
-			Click
-		}
-	}
-} 
-else If WinActive("Chart") {
-	If WinExist("Update") { 
-		WinActivate, Update
-	} else {
-		If (ImageMouseMove("chart-desktop")) {
-			Click
-		}
-	}
-} 
-else {
-    If WinExist("Update") {
-        WinActivate, Update
-        Exit
-    }
-	If WinExist("Chart") {
-        WinActivate, Chart
-        Exit
-    }
-	If WinExist("Chart Desktop") {
-        WinActivate, Chart Desktop
-        Exit
-    }
-}
-return
-
-$c::
-if WinActive("Chart Desktop"){
-    gosub, SwitchDocumentFocus
-	If (ImageMouseMove("append")) {
-    	Keywait, c
-    	Click
-    	CreateCPOEAppend()
-    	exit
-	}
-
-} else if WinActive("Chart"){
-    gosub, SwitchDocumentFocus
-	If (ImageMouseMove("append-chart")) {
-    	Keywait, c
-    	Click
-    	CreateCPOEAppend()
-    	exit
-	}
-} else if WinActive("Centricity Practice Solution Browser"){
-	Keywait, c
-	Send !{F4}
-	Sleep, 200
-	IfWinExist, Chart Desktop
-    WinActivate, Chart Desktop
-	IfWinExist, Chart
-    WinActivate, Chart
-    Sleep, 200
-	If (ImageMouseMove("append")) {
-    	Click
-    	CreateCPOEAppend()
-	}
-	if (imageMouseMove("append-chart")) {
-    	Click
-    	CreateCPOEAppend()
-	}
-} else {
-    send c
-}
-return
-
-; I'm Done
-^Space::
-If WinActive("End Update") {
-    gosub, SignUpdateBackToDesktop
-}
-else If WinActive("Append to Document") {
-	Send !s
-    Sleep, 100
-    If (ImageMouseMove("chart-desktop")) {
-        Click
-    }
-}
-else If WinActive("Care Alert Warning") {
-	Send !c
-}
-else If WinActive("Update Problems") {
-	Click, 890, 580
-}
-else If WinActive("Update Medications") {
-	Click, 558, 543
-}
-else If WinActive("Update Orders") {
-	Click, 549, 641
-}
-else If WinActive("Update") {
-	gosub, EndUpdate
-    gosub, SignUpdateBackToDesktop
-}
-else If WinActive("Customize Letter") {
-	Send !p
-	WinWaitNotActive, Customize Letter, , 10
-	if (ErrorLevel = 0) {
-    	Sleep, 100
-    	WinWaitActive, Customize Letter, , 30
-    	if (ErrorLevel = 0) {
-        	Sleep, 100
-        	Send !s
-        	WinWaitActive, Route Document, , 30
-        	if (ErrorLevel = 0) {
-            	Sleep, 100
-            	Send !s
-            	WinWaitActive, Print, , 30
-            	if (ErrorLevel = 0) {
-                	Sleep, 100
-                	Click 568, 355
-            	}	
-        	}
-        }
-    }
-} else if WinActive("Centricity Practice Solution Browser"){
-	Send !{F4}
-	Sleep, 200
-	IfWinExist, Chart Desktop
-    WinActivate, Chart Desktop
-	IfWinExist, Chart
-    WinActivate, Chart
-    Sleep, 200
-	If (ImageMouseMove("sign-chart")) {
-    	Click
-	}
-	if (imageMouseMove("sign-chart-desktop")) {
-    	Click
-	}
-} 
-else {
-    return
-}
-return
-
-; Hotkeys for Specific Windows #########################################
+; Locations and Hotkeys #########################################
 
 #IfWinActive, Update Med
+    F2::UpdateMedSearch()
+    ^Space::Click, 558, 543
 
-F2::
-gosub, UpdateMedSearch
-return
-
-#IfWinActive
 
 #IfWinActive, Update Prob
+    F3::Send !n
+    ^Space::Click, 890, 580
 
-F3::
-Send !n
-return
-
-#IfWinActive
 
 #IfWinActive, Update Orde
+    F3::Click, 650, 237
+    ^Space::Click, 549, 641
 
-F3::
-Click, 650, 237
-return
 
-#IfWinActive
+#IfWinActive, End Update
+    \::PatternHotKey(".->End()", "..->EndDouble()")
+    ^Space::SignUpdateBackToDesktop()
 
 
 #IfWinActive, Update -
+    F1::PatternHotKey(".->OrderSearch()")
+    F2::PatternHotKey(".->UpdateMeds()", "..->MedSearch()")
+    F3::PatternHotKey(".->UpdateProblems()", "..->ProblemSearch()")
+    `::WinActivate, Chart
+    \::PatternHotKey(".->End()", "..->EndDouble()")
+    ^Space::
+    	EndUpdate()
+        SignUpdateBackToDesktop()
+        return
+        
 
-F1::PatternHotKey(".->OrderSearch")
-F2::PatternHotKey(".->UpdateMeds", "..->MedSearch")
-F3::PatternHotKey(".->UpdateProblems", "..->ProblemSearch")
+#IfWinActive, Care Alert Warning
+    ^Space::Send !c
+    
+    
+#IfWinActive, Append to Document
+    ^Space::
+        Send !s
+        GoChartDesktop()
+        return
+        
+        
+#IfWinActive, New Alert/Flag
+     ^Space::Send !s
 
-#IfWinActive
+
+#IfWinActive, Customize Letter
+    ^Space::LetterPrintAndSign()
+
+
+#IfWinActive, Route Documen
+    \::Send !r
+
 
 #IfWinActive, Centricity Practice So
+    \::Send !{F4}
+    Space::PatternHotKey(".->BrowserPageDown()", "..->BrowserCloseandSign()")    
+    c::AttachmentCPOEAppend()
+    ^Space::AttachmentSign()
 
-$Space::PatternHotKey(".->SingleSpace", "..->DoubleSpace")
-
-#IfWinActive
 
 #IfWinActive, Chart Deskto
+    ;#$Space::PatternHotKey(".->SingleSpace()", "..->DoubleSpace()")
+    `::ChartDesktopSwap()
+    c::ChartDesktopCPOEAppend()
+        
 
-$Space::PatternHotKey(".->SingleSpace", "..->DoubleSpace")
+#IfWinActive, Chart
+    `::ChartSwap()
+    c::
+        
+
 
 #IfWinActive
 
 ; Hotkey Functions #########################################
 
-SwitchDocumentFocus:
-ControlGetFocus, chartfocus
-if (chartfocus = "SysTreeView322") {
-    ControlFocus, "SftTreeControl701"
-}
-return
-
-OrderSearch:
-Click, 254, 38
-WinWaitActive, Update Orders, , 3
-if (ErrorLevel = 0) {
-    CitrixSleep()
-    Click, 263, 269
-    CitrixSleep()
-    Click 406, 313
-}
-return
-
-MedSearch:
-Click, 350, 38
-WinWaitActive, Update Medications, , 3
-if (ErrorLevel = 0) {
-	GoSub, UpdateMedSearch
-}
-return
-
-UpdateMedSearch:
-CitrixSleep()
-Send !n
-WinWaitActive, New Medication, , 3
-if (ErrorLevel = 0) {
-	CitrixSleep()
-	Click, 712, 65
-	WinWaitActive, Find Medication, , 5
-	If (ErrorLevel = 1) {
-	exit
-	}
-}
-return
-
-UpdateMeds:
-Click, 350, 38
-return
-
-ProblemSearch:
-Click, 428, 38
-WinWaitActive, Update Problems, , 3
-if (ErrorLevel = 0) {
-	CitrixSleep()
-	Send !n
-}
-return
-
-UpdateProblems:
-Click, 428, 38
-return
-
-
-CitrixSleep(){
-Sleep, 150
-}
-return
-
-SingleSpace:
-If WinActive("Centricity Practice Solution Browser") {
-    gosub, BrowserPageDown
-} else If WinActive("Chart Desktop") {
-    ControlFocus, "SftTreeControl701"
-    ControlClick, Button3
-} else {
-    Send {Space}
-}
-return
-
-DoubleSpace:
-If WinActive("Centricity Practice Solution Browser") {
-    gosub, BrowserCloseandSign
-} else {
-    Send {Space 2}
-}
-
-return
-
-BrowserPageDown:
-WinGetPos , , , WinWidth, WinHeight, A
-xclick := WinWidth - 18
-yclick := WinHeight -30
-Click, %xclick%, %yclick%
-return
-
-BrowserCloseandSign:
-Send !{F4}
-Sleep, 500
-If WinExist("Chart Desktop"){
-    WinActivate, Chart Desktop
-    sleep, 150
-    If (ImageMouseMove("sign-chart-desktop")) {
-        Click
+SwitchDocumentFocus(){
+    ControlGetFocus, chartfocus
+    if (chartfocus = "SysTreeView322") {
+        ControlFocus, "SftTreeControl701"
     }
 }
-return
 
-End:
-If WinActive("End Update") {
-	Send !o
+OrderSearch(){
+    Click, 254, 38
+    WinWaitActive, Update Orders, , 3
+    if (ErrorLevel = 0) {
+        sleep, 150
+        Click, 263, 269
+        sleep, 150
+        Click 406, 313
+    }
 }
-else If WinActive("Update") {
-	gosub, EndUpdate
-}
-else If WinActive("Centricity Practice Solution Browser") {
-    Send !{F4}
-}
-else If WinActive("Route Document") {
-    Send !r
-}
-else {
-    return
-}
-return
 
-EndDouble:
-If WinActive("Update") {
-	gosub, EndUpdate
-	WinWaitActive, End Update, , 5
-	if (ErrorLevel = 0) {
-        gosub, SendtoBuddy
-	}
-} 
-else If WinActive("End Update") {
-    gosub, SendtoBuddy
-}   
-else {
-	return
+MedSearch(){
+    Click, 350, 38
+    WinWaitActive, Update Medications, , 3
+    if (ErrorLevel = 0) {
+        UpdateMedSearch()
+    }
 }
-return
 
+UpdateMedSearch(){
+    sleep, 150
+    Send !n
+    WinWaitActive, New Medication, , 3
+    if (ErrorLevel = 0) {
+        sleep, 150
+        Click, 712, 65
+        WinWaitActive, Find Medication, , 5
+        If (ErrorLevel = 1) {
+        exit
+        }
+    }
+}
 
-SendtoBuddy:
-Send !n
-WinWaitActive, New Routing Information, , 3
-if (ErrorLevel = 0) {
-    Send %YourBuddyName%
-    Sleep, 100
-    ; Citrix loses window focus so use tab to go through controls. 
-    Send {Enter}{Tab 9}{Enter}
-    WinWaitActive, End Update, , 3
-    if (ErrorLevel =0) {
-        Send !o
-        WinWaitActive, Chart, , 15
+LetterPrintAndSign(){
+    Send !p
+    WinWaitNotActive, Customize Letter, , 10
+    if (ErrorLevel = 0) {
+        Sleep, 100
+        WinWaitActive, Customize Letter, , 30
         if (ErrorLevel = 0) {
-            If (ImageMouseMove("chart-desktop")) {
-                Sleep, 800
-                Click
+            Sleep, 100
+            Send !s
+            WinWaitActive, Route Document, , 30
+            if (ErrorLevel = 0) {
+                Sleep, 100
+                Send !s
+                WinWaitActive, Print, , 30
+                if (ErrorLevel = 0) {
+                    Sleep, 100
+                    Click 568, 355
+                }	
             }
         }
     }
 }
-return
 
-SignUpdateBackToDesktop:
-Send !m
-Send !m
-Send !m
-Send !m
-Send !s
-WinWaitActive, Chart, , 15
-if (ErrorLevel = 0) {
-    Sleep, 500
-    If (ImageMouseMove("chart-desktop")) {
+AttachmentCPOEAppend(){
+    Keywait, c
+    Send !{F4}
+    Sleep, 200
+    IfWinExist, Chart Desktop
+    WinActivate, Chart Desktop
+    IfWinExist, Chart
+    WinActivate, Chart
+    Sleep, 200
+    If (ImageMouseMove("append")) {
+        Click
+        CreateCPOEAppend()
+    }
+    if (imageMouseMove("append-chart")) {
+        Click
+        CreateCPOEAppend()
+    }
+}
+
+AttachmentSign(){
+    Send !{F4}
+    Sleep, 200
+    IfWinExist, Chart Desktop
+    WinActivate, Chart Desktop
+    IfWinExist, Chart
+    WinActivate, Chart
+    Sleep, 200
+    If (ImageMouseMove("sign-chart")) {
+        Click
+    }
+    if (imageMouseMove("sign-chart-desktop")) {
         Click
     }
 }
+
+GoChartDesktop(){
+sleep, 150
+If (ImageMouseMove("chart-desktop")) {
+    Click
+    WinWaitActive, Chart Desktop, , 2
+    if (Errorlevel = 1) {
+        If (ImageMouseMove("chart-desktop")) {
+            Click
+        }
+    }
+} else {
+    exit
+    ; Don't want macro to continue if 
+}
+}
 return
 
-EndUpdate:
-Send ^e
-; Sometimes Fails, Try a few times?
-WinWaitActive, End Update, , 3
-if (ErrorLevel = 1) {
-	Send ^e
-	WinWaitActive, End Update, , 2
-	if (ErrorLevel = 1) {
-		Send ^e
-	}
+UpdateMeds(){
+    Click, 350, 38
 }
-sleep, 300
-return
+
+ProblemSearch(){
+    Click, 428, 38
+    WinWaitActive, Update Problems, , 3
+    if (ErrorLevel = 0) {
+        sleep, 150
+        Send !n
+    }
+}
+
+UpdateProblems(){
+    Click, 428, 38
+}
+
+BrowserPageDown(){
+    WinGetPos , , , WinWidth, WinHeight, A
+    xclick := WinWidth - 18
+    yclick := WinHeight -30
+    Click, %xclick%, %yclick%
+}
+
+BrowserCloseandSign(){
+    Send !{F4}
+    Sleep, 500
+    If WinExist("Chart Desktop"){
+        WinActivate, Chart Desktop
+        sleep, 150
+        If (ImageMouseMove("sign-chart-desktop")) {
+            Click
+        }
+    }
+}
+
+ChartDesktopSwap(){
+    If WinExist("Update") { 
+        WinActivate, Update
+    } else {
+        If (ImageMouseMove("chart")) {
+            Click
+        }
+    } 
+}
+
+ChartSwap(){
+    If WinExist("Update") { 
+        WinActivate, Update
+    } else {
+        GoChartDesktop()
+    }
+}
+
+ChartDesktopCPOEAppend(){
+    SwitchDocumentFocus()
+    If (ImageMouseMove("append")) {
+        Keywait, c
+        Click
+        CreateCPOEAppend()
+        exit
+    }
+}
+
+ChartCPOEAppend(){
+    SwitchDocumentFocus()
+    If (ImageMouseMove("append-chart")) {
+        Keywait, c
+        Click
+        CreateCPOEAppend()
+        exit
+    }
+}
+
+End(){
+    If WinActive("End Update") {
+        Send !o
+    }
+    else If WinActive("Update") {
+        EndUpdate()
+    }
+}
+
+EndDouble(){
+    If WinActive("Update") {
+        EndUpdate()
+        WinWaitActive, End Update, , 5
+        if (ErrorLevel = 0) {
+            SendtoBuddy()
+        }
+    } 
+    else If WinActive("End Update") {
+        SendtoBuddy()
+    }   
+}
+
+SendtoBuddy(){
+    global 
+    Send !n
+    WinWaitActive, New Routing Information, , 3
+    if (ErrorLevel = 0) {
+        Sleep, 100
+        Send %Buddy%
+        Sleep, 100
+        ; Citrix loses window focus so use tab to go through controls. 
+        Send {Enter}{Tab 9}{Enter}
+        WinWaitActive, End Update, , 3
+        if (ErrorLevel =0) {
+            Send !o
+            WinWaitActive, Chart, , 15
+            if (ErrorLevel = 0) {
+                GoChartDesktop()
+            }
+        }
+    }
+}
+
+SignUpdateBackToDesktop(){
+    Send !m
+    Send !m
+    Send !m
+    Send !m
+    Send !s
+    WinWaitActive, Chart, , 15
+    if (ErrorLevel = 0) {
+        GoChartDesktop()
+    }
+}
+
+EndUpdate(){
+    Send ^e
+    ; Sometimes Fails, Try a few times?
+    WinWaitActive, End Update, , 3
+    if (ErrorLevel = 1) {
+        Send ^e
+        WinWaitActive, End Update, , 2
+        if (ErrorLevel = 1) {
+            Send ^e
+        }
+    }
+    sleep, 300
+}
 
 CreateCPOEAppend(){
 WinWaitActive, Append to, , 3
@@ -508,9 +456,6 @@ ImageMouseMove(imagename, x1:=-2000, y1:=-2000, x2:=0, y2:=0){
 
 ; Downloaded Functions #########################################
 ; http://www.autohotkey.com/board/topic/66855-patternhotkey-map-shortlong-keypress-patterns-to-anything/?hl=%2Bpatternhotkey
-;         "pattern->label"                ; Maps pattern to label (GoSub)
-;         and patterns match the following formats:
-;             '.' or '0' represents a short press
 PatternHotKey(arguments*)
 {
     period = 0.2
