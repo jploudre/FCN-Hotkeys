@@ -58,7 +58,7 @@ return
     \::Send !r
 
 
-#IfWinActive, Centricity Practice So
+#IfWinActive, Centricity Practice Solution Brow
     \::Send !{F4}
     Space::PatternHotKey(".->BrowserPageDown()", "..->BrowserCloseandSign()")    
     $c::AttachmentCPOEAppend()
@@ -81,28 +81,29 @@ return
 ; Hotkey Functions #########################################
 
 Setup(){
-#NoEnv
-SendMode Input
-SetWorkingDir %A_ScriptDir%
-CoordMode, Mouse, Window
-#SingleInstance force
-#Persistent
-SetKeyDelay, 30
+    global
+    #NoEnv
+    SendMode Input
+    SetWorkingDir %A_ScriptDir%
+    CoordMode, Mouse, Window
+    #SingleInstance force
+    #Persistent
+    SetKeyDelay, 30
 
-Menu, Tray, NoStandard
-Menu, Tray, Add, Edit Buddy, EditBuddy
-Menu, Tray, Add, Reload, ReloadScript
-Menu, Tray, Add, Exit, ExitScript
-Menu, Tray, Icon, %SetWorkingDir%\files\favicon.ico
-Menu, Tray, Default, Edit Buddy
+    Menu, Tray, NoStandard
+    Menu, Tray, Add, Edit Buddy, EditBuddy
+    Menu, Tray, Add, Reload, ReloadScript
+    Menu, Tray, Add, Exit, ExitScript
+    Menu, Tray, Icon, %SetWorkingDir%\files\favicon.ico
+    Menu, Tray, Default, Edit Buddy
 
-SplashImage, %SetWorkingDir%\files\FCN-macros.png,B2 FS18 C0, 
-Sleep, 700
-SplashImage, Off
+    SplashImage, %SetWorkingDir%\files\FCN-macros.png,B2 FS18 C0, 
+    Sleep, 700
+    SplashImage, Off
 
-FirstRun()
-IniRead, Buddy, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
-return
+    FirstRun()
+    IniRead, Buddy, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
+    return
 }
 
 FirstRun(){
