@@ -61,14 +61,14 @@ return
 #IfWinActive, Centricity Practice So
     \::Send !{F4}
     Space::PatternHotKey(".->BrowserPageDown()", "..->BrowserCloseandSign()")    
-    c::AttachmentCPOEAppend()
+    $c::AttachmentCPOEAppend()
     ^Space::AttachmentSign()
 
 
 #IfWinActive, Chart Deskto
     ;#$Space::PatternHotKey(".->SingleSpace()", "..->DoubleSpace()")
     `::ChartDesktopSwap()
-    c::ChartDesktopCPOEAppend()
+    $c::ChartDesktopCPOEAppend()
         
 
 #IfWinActive, Chart
@@ -331,6 +331,8 @@ ChartDesktopCPOEAppend(){
         Click
         CreateCPOEAppend()
         exit
+    } else {
+        send c
     }
 }
 
@@ -341,6 +343,8 @@ ChartCPOEAppend(){
         Click
         CreateCPOEAppend()
         exit
+    } else {
+        send c
     }
 }
 
