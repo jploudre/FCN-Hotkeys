@@ -139,6 +139,7 @@ InputBox, BuddyName, Who's your Buddy?,
     ), , 300, , , , , , %Buddy%
     if (Errorlevel= 0) {
         IniWrite, %BuddyName%, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
+        Reload
         }
 return
 

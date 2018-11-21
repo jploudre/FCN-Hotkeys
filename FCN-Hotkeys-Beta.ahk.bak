@@ -58,7 +58,7 @@ return
     \::Send !r
 
 
-#IfWinActive, Centricity Practice So
+#IfWinActive, Centricity Practice Solution Brow
     \::Send !{F4}
     Space::PatternHotKey(".->BrowserPageDown()", "..->BrowserCloseandSign()")    
     $c::AttachmentCPOEAppend()
