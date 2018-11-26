@@ -33,6 +33,7 @@ return
     	EndUpdate()
         SignUpdateBackToDesktop()
         return
+    !c::MsgBox Hi
         
 
 #IfWinActive, Care Alert Warning
@@ -47,6 +48,14 @@ return
         
         
 #IfWinActive, New Alert/Flag
+     ^Space::Send !s
+
+
+#IfWinActive, Forward Flag
+     ^Space::Send !s
+
+
+#IfWinActive, Reply Flag
      ^Space::Send !s
 
 
@@ -139,6 +148,7 @@ InputBox, BuddyName, Who's your Buddy?,
     ), , 300, , , , , , %Buddy%
     if (Errorlevel= 0) {
         IniWrite, %BuddyName%, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
+        Reload
         }
 return
 
@@ -438,6 +448,12 @@ CreateCPOEAppend(){
                 Exit
             }
         }
+    }
+}
+
+GoCPOEForm(){
+    If (ImageMouseMove("CPOE-form")) {
+        Click, 2
     }
 }
 

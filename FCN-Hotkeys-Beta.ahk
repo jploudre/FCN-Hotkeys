@@ -33,6 +33,7 @@ return
     	EndUpdate()
         SignUpdateBackToDesktop()
         return
+    !c::GoCPOEForm()
         
 
 #IfWinActive, Care Alert Warning
@@ -47,6 +48,14 @@ return
         
         
 #IfWinActive, New Alert/Flag
+     ^Space::Send !s
+
+
+#IfWinActive, Forward Flag
+     ^Space::Send !s
+
+
+#IfWinActive, Reply Flag
      ^Space::Send !s
 
 
@@ -439,6 +448,12 @@ CreateCPOEAppend(){
                 Exit
             }
         }
+    }
+}
+
+GoCPOEForm(){
+    If (ImageMouseMove("CPOE-form")) {
+        Click, 2
     }
 }
 

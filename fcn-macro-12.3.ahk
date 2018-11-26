@@ -1,26 +1,110 @@
-; Setup #########################################
-#NoEnv
-SendMode Input
-SetWorkingDir %A_ScriptDir%
-CoordMode, Mouse, Window
-#SingleInstance force
-#Persistent
-SetKeyDelay, 30
-
-Menu, Tray, NoStandard
-Menu, Tray, Add, Edit Buddy, EditBuddy
-Menu, Tray, Add, Reload, ReloadScript
-Menu, Tray, Add, Exit, ExitScript
-Menu, Tray, Icon, %SetWorkingDir%\files\favicon.ico
-Menu, Tray, Default, Edit Buddy
-
-SplashImage, %SetWorkingDir%\files\FCN-macros.png,B2 FS18 C0, 
-Sleep, 700
-SplashImage, Off
-
-FirstRun()
-IniRead, Buddy, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
+Setup()
 return
+
+; Locations and Hotkeys #########################################
+
+#IfWinActive, Update Med
+    F2::UpdateMedSearch()
+    ^Space::Click, 558, 543
+
+
+#IfWinActive, Update Prob
+    F3::Send !n
+    ^Space::Click, 890, 580
+
+
+#IfWinActive, Update Orde
+    F3::Click, 650, 237
+    ^Space::Click, 549, 641
+
+
+#IfWinActive, End Update
+    \::PatternHotKey(".->End()", "..->EndDouble()")
+    ^Space::SignUpdateBackToDesktop()
+
+
+#IfWinActive, Update -
+    F1::PatternHotKey(".->OrderSearch()")
+    F2::PatternHotKey(".->UpdateMeds()", "..->MedSearch()")
+    F3::PatternHotKey(".->UpdateProblems()", "..->ProblemSearch()")
+    `::WinActivate, Chart
+    \::PatternHotKey(".->End()", "..->EndDouble()")
+    ^Space::
+    	EndUpdate()
+        SignUpdateBackToDesktop()
+        return
+        
+
+#IfWinActive, Care Alert Warning
+    ^Space::Send !c
+    
+    
+#IfWinActive, Append to Document
+    ^Space::
+        Send !s
+        GoChartDesktop()
+        return
+        
+        
+#IfWinActive, New Alert/Flag
+     ^Space::Send !s
+
+
+#IfWinActive, Customize Letter
+    ^Space::LetterPrintAndSign()
+
+
+#IfWinActive, Route Documen
+    \::Send !r
+
+
+#IfWinActive, Centricity Practice Solution Brow
+    \::Send !{F4}
+    Space::PatternHotKey(".->BrowserPageDown()", "..->BrowserCloseandSign()")    
+    $c::AttachmentCPOEAppend()
+    ^Space::AttachmentSign()
+
+
+#IfWinActive, Chart Deskto
+    ;#$Space::PatternHotKey(".->SingleSpace()", "..->DoubleSpace()")
+    `::ChartDesktopSwap()
+    $c::ChartDesktopCPOEAppend()
+        
+
+#IfWinActive, Chart
+    `::ChartSwap()
+    c::ChartCPOEAppend()
+
+
+#IfWinActive
+
+; Hotkey Functions #########################################
+
+Setup(){
+    global
+    #NoEnv
+    SendMode Input
+    SetWorkingDir %A_ScriptDir%
+    CoordMode, Mouse, Window
+    #SingleInstance force
+    #Persistent
+    SetKeyDelay, 30
+
+    Menu, Tray, NoStandard
+    Menu, Tray, Add, Edit Buddy, EditBuddy
+    Menu, Tray, Add, Reload, ReloadScript
+    Menu, Tray, Add, Exit, ExitScript
+    Menu, Tray, Icon, %SetWorkingDir%\files\favicon.ico
+    Menu, Tray, Default, Edit Buddy
+
+    SplashImage, %SetWorkingDir%\files\FCN-macros.png,B2 FS18 C0, 
+    Sleep, 700
+    SplashImage, Off
+
+    FirstRun()
+    IniRead, Buddy, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
+    return
+}
 
 FirstRun(){
 IfNotExist, Z:\FCN-Macro-Settings.ini
@@ -55,6 +139,7 @@ InputBox, BuddyName, Who's your Buddy?,
     ), , 300, , , , , , %Buddy%
     if (Errorlevel= 0) {
         IniWrite, %BuddyName%, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
+        Reload
         }
 return
 
@@ -65,205 +150,6 @@ return
 ReloadScript:
 Reload
 Return
-
-; Hotkey Logic #########################################
-
-\::PatternHotKey(".->End()", "..->EndDouble()")
-return
-
-`::
-If WinActive("Update") {
-	WinActivate, Chart
-}
-else If WinActive("Chart Desktop") {
-	If WinExist("Update") { 
-		WinActivate, Update
-	} else {
-		If (ImageMouseMove("chart")) {
-			Click
-		}
-	}
-} 
-else If WinActive("Chart") {
-	If WinExist("Update") { 
-		WinActivate, Update
-	} else {
-		GoChartDesktop()
-        return
-	}
-} 
-else {
-    If WinExist("Update") {
-        WinActivate, Update
-        Exit
-    }
-	If WinExist("Chart") {
-        WinActivate, Chart
-        Exit
-    }
-	If WinExist("Chart Desktop") {
-        WinActivate, Chart Desktop
-        Exit
-    }
-}
-return
-
-$c::
-if WinActive("Chart Desktop"){
-    SwitchDocumentFocus()
-	If (ImageMouseMove("append")) {
-    	Keywait, c
-    	Click
-    	CreateCPOEAppend()
-    	exit
-	}
-
-} else if WinActive("Chart"){
-    SwitchDocumentFocus()
-	If (ImageMouseMove("append-chart")) {
-    	Keywait, c
-    	Click
-    	CreateCPOEAppend()
-    	exit
-	}
-} else if WinActive("Centricity Practice Solution Browser"){
-	Keywait, c
-	Send !{F4}
-	Sleep, 200
-	IfWinExist, Chart Desktop
-    WinActivate, Chart Desktop
-	IfWinExist, Chart
-    WinActivate, Chart
-    Sleep, 200
-	If (ImageMouseMove("append")) {
-    	Click
-    	CreateCPOEAppend()
-	}
-	if (imageMouseMove("append-chart")) {
-    	Click
-    	CreateCPOEAppend()
-	}
-return
-} else {
-    send c
-}
-return
-
-; I'm Done
-^Space::
-If WinActive("End Update") {
-    SignUpdateBackToDesktop()
-}
-else If WinActive("Append to Document") {
-	Send !s
-    GoChartDesktop()
-}
-else If WinActive("Care Alert Warning") {
-	Send !c
-}
-else If WinActive("Update Problems") {
-	Click, 890, 580
-}
-else If WinActive("Update Medications") {
-	Click, 558, 543
-}
-else If WinActive("New Alert/Fla") {
-	Send !s
-}
-else If WinActive("Update Orders") {
-	Click, 549, 641
-}
-else If WinActive("Update") {
-	EndUpdate()
-    SignUpdateBackToDesktop()
-}
-else If WinActive("Customize Letter") {
-	Send !p
-	WinWaitNotActive, Customize Letter, , 10
-	if (ErrorLevel = 0) {
-    	Sleep, 100
-    	WinWaitActive, Customize Letter, , 30
-    	if (ErrorLevel = 0) {
-        	Sleep, 100
-        	Send !s
-        	WinWaitActive, Route Document, , 30
-        	if (ErrorLevel = 0) {
-            	Sleep, 100
-            	Send !s
-            	WinWaitActive, Print, , 30
-            	if (ErrorLevel = 0) {
-                	Sleep, 100
-                	Click 568, 355
-            	}	
-        	}
-        }
-    }
-} else if WinActive("Centricity Practice Solution Browser"){
-	Send !{F4}
-	Sleep, 200
-	IfWinExist, Chart Desktop
-    WinActivate, Chart Desktop
-	IfWinExist, Chart
-    WinActivate, Chart
-    Sleep, 200
-	If (ImageMouseMove("sign-chart")) {
-    	Click
-	}
-	if (imageMouseMove("sign-chart-desktop")) {
-    	Click
-	}
-} 
-else {
-    return
-}
-return
-
-#IfWinActive, Update Med
-
-F2::
-UpdateMedSearch()
-return
-
-#IfWinActive
-
-#IfWinActive, Update Prob
-
-F3::
-Send !n
-return
-
-#IfWinActive
-
-#IfWinActive, Update Orde
-
-F3::
-Click, 650, 237
-return
-
-#IfWinActive
-
-
-#IfWinActive, Update -
-
-F1::PatternHotKey(".->OrderSearch()")
-F2::PatternHotKey(".->UpdateMeds()", "..->MedSearch()")
-F3::PatternHotKey(".->UpdateProblems()", "..->ProblemSearch()")
-
-#IfWinActive
-
-#IfWinActive, Centricity Practice So
-
-$Space::PatternHotKey(".->SingleSpace()", "..->DoubleSpace()")
-
-#IfWinActive
-
-#IfWinActive, Chart Deskto
-
-$Space::PatternHotKey(".->SingleSpace()", "..->DoubleSpace()")
-
-#IfWinActive
-
-; Hotkey Functions #########################################
 
 SwitchDocumentFocus(){
     ControlGetFocus, chartfocus
@@ -305,22 +191,86 @@ UpdateMedSearch(){
     }
 }
 
-GoChartDesktop(){
-sleep, 150
-If (ImageMouseMove("chart-desktop")) {
-    Click
-    WinWaitActive, Chart Desktop, , 2
-    if (Errorlevel = 1) {
-        If (ImageMouseMove("chart-desktop")) {
-            Click
+LetterPrintAndSign(){
+    Send !p
+    WinWaitNotActive, Customize Letter, , 10
+    if (ErrorLevel = 0) {
+        Sleep, 100
+        WinWaitActive, Customize Letter, , 30
+        if (ErrorLevel = 0) {
+            Sleep, 100
+            Send !s
+            WinWaitActive, Route Document, , 30
+            if (ErrorLevel = 0) {
+                Sleep, 100
+                Send !s
+                WinWaitActive, Print, , 30
+                if (ErrorLevel = 0) {
+                    Sleep, 100
+                    Click 568, 355
+                }	
+            }
         }
     }
-} else {
-    exit
-    ; Don't want macro to continue if 
 }
+
+AttachmentCPOEAppend(){
+    Keywait, c
+    Send !{F4}
+    Sleep, 200
+    IfWinExist, Chart Desktop
+    WinActivate, Chart Desktop
+    IfWinExist, Chart
+    WinActivate, Chart
+    Sleep, 200
+    If (ImageMouseMove("append")) {
+        Click
+        CreateCPOEAppend()
+    }
+    if (imageMouseMove("append-chart")) {
+        Click
+        CreateCPOEAppend()
+    }
 }
-return
+
+AttachmentSign(){
+    Send !{F4}
+    Sleep, 200
+    IfWinExist, Chart Desktop
+    WinActivate, Chart Desktop
+    IfWinExist, Chart
+    WinActivate, Chart
+    Sleep, 200
+    If (ImageMouseMove("sign-chart")) {
+        Click
+    }
+    if (imageMouseMove("sign-chart-desktop")) {
+        Click
+    }
+}
+
+GoChartDesktop(){
+    sleep, 500
+    If (ImageMouseMove("chart-desktop")) {
+        Click
+        WinWaitActive, Chart Desktop, , 1
+        if (Errorlevel = 1) {
+            If (ImageMouseMove("chart-desktop")) {
+                Click
+                WinWaitActive, Chart Desktop, , 1
+                if (Errorlevel = 1) {
+                    If (ImageMouseMove("chart-desktop")) {
+                        Click
+                    }
+                }
+            }
+        }
+    } else {
+        exit
+        ; Don't want macro to continue if 
+    }
+}
+
 
 UpdateMeds(){
     Click, 350, 38
@@ -337,25 +287,6 @@ ProblemSearch(){
 
 UpdateProblems(){
     Click, 428, 38
-}
-
-SingleSpace(){
-    If WinActive("Centricity Practice Solution Browser") {
-        BrowserPageDown()
-    } else If WinActive("Chart Desktop") {
-        ControlFocus, "SftTreeControl701"
-        ControlClick, Button3
-    } else {
-        Send {Space}
-    }
-}
-
-DoubleSpace(){
-    If WinActive("Centricity Practice Solution Browser") {
-        BrowserCloseandSign()
-    } else {
-        Send {Space 2}
-    }
 }
 
 BrowserPageDown(){
@@ -377,21 +308,54 @@ BrowserCloseandSign(){
     }
 }
 
+ChartDesktopSwap(){
+    If WinExist("Update") { 
+        WinActivate, Update
+    } else {
+        If (ImageMouseMove("chart")) {
+            Click
+        }
+    } 
+}
+
+ChartSwap(){
+    If WinExist("Update") { 
+        WinActivate, Update
+    } else {
+        GoChartDesktop()
+    }
+}
+
+ChartDesktopCPOEAppend(){
+    SwitchDocumentFocus()
+    If (ImageMouseMove("append")) {
+        Keywait, c
+        Click
+        CreateCPOEAppend()
+        exit
+    } else {
+        send c
+    }
+}
+
+ChartCPOEAppend(){
+    SwitchDocumentFocus()
+    If (ImageMouseMove("append-chart")) {
+        Keywait, c
+        Click
+        CreateCPOEAppend()
+        exit
+    } else {
+        send c
+    }
+}
+
 End(){
     If WinActive("End Update") {
         Send !o
     }
     else If WinActive("Update") {
         EndUpdate()
-    }
-    else If WinActive("Centricity Practice Solution Browser") {
-        Send !{F4}
-    }
-    else If WinActive("Route Document") {
-        Send !r
-    }
-    else {
-        return
     }
 }
 
@@ -406,11 +370,7 @@ EndDouble(){
     else If WinActive("End Update") {
         SendtoBuddy()
     }   
-    else {
-        return
-    }
 }
-
 
 SendtoBuddy(){
     global 
@@ -460,7 +420,7 @@ EndUpdate(){
 }
 
 CreateCPOEAppend(){
-WinWaitActive, Append to, , 3
+    WinWaitActive, Append to, , 3
     if (ErrorLevel = 0) {
         Sleep, 100
         Send !F
@@ -476,7 +436,7 @@ WinWaitActive, Append to, , 3
                 If (ImageMouseMove("CPOE-form")) {
                     Click, 2
                 }
-				Exit
+                Exit
             }
         }
     }
@@ -511,9 +471,6 @@ ImageMouseMove(imagename, x1:=-2000, y1:=-2000, x2:=0, y2:=0){
 
 ; Downloaded Functions #########################################
 ; http://www.autohotkey.com/board/topic/66855-patternhotkey-map-shortlong-keypress-patterns-to-anything/?hl=%2Bpatternhotkey
-;         "pattern->label"                ; Maps pattern to label (GoSub)
-;         and patterns match the following formats:
-;             '.' or '0' represents a short press
 PatternHotKey(arguments*)
 {
     period = 0.2
