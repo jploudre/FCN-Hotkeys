@@ -33,7 +33,7 @@ return
     	EndUpdate()
         SignUpdateBackToDesktop()
         return
-    !c::MsgBox Hi
+    !c::GoCPOEForm()
         
 
 #IfWinActive, Care Alert Warning

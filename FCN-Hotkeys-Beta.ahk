@@ -8,11 +8,19 @@ return
     ^Space::Click, 558, 543
 
 
+#IfWinActive, New Medication
+    ^Space::Click, 686, 659
+
+
 #IfWinActive, Update Prob
     F3::Send !n
     ^Space::Click, 890, 580
 
 
+#IfWinActive, New Problem
+    ^Space::Click, 420, 537
+    
+    
 #IfWinActive, Update Orde
     F3::Click, 650, 237
     ^Space::Click, 549, 641
