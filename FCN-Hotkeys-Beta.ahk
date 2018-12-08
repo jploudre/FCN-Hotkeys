@@ -236,9 +236,9 @@ AttachmentCPOEAppend(){
     Send !{F4}
     Sleep, 200
     IfWinExist, Chart Desktop
-    WinActivate, Chart Desktop
+        WinActivate, Chart Desktop
     IfWinExist, Chart
-    WinActivate, Chart
+        WinActivate, Chart
     Sleep, 200
     If (ImageMouseMove("append")) {
         Click
@@ -254,9 +254,9 @@ AttachmentSign(){
     Send !{F4}
     Sleep, 200
     IfWinExist, Chart Desktop
-    WinActivate, Chart Desktop
+        WinActivate, Chart Desktop
     IfWinExist, Chart
-    WinActivate, Chart
+        WinActivate, Chart
     Sleep, 200
     If (ImageMouseMove("sign-chart")) {
         Click
@@ -268,24 +268,15 @@ AttachmentSign(){
 
 GoChartDesktop(){
     sleep, 500
-    If (ImageMouseMove("chart-desktop")) {
-        Click
-        WinWaitActive, Chart Desktop, , 1
-        if (Errorlevel = 1) {
-            If (ImageMouseMove("chart-desktop")) {
-                Click
-                WinWaitActive, Chart Desktop, , 1
-                if (Errorlevel = 1) {
-                    If (ImageMouseMove("chart-desktop")) {
-                        Click
-                    }
-                }
-            }
+    Loop, 3
+    {
+        If (ImageMouseMove("chart-desktop")) {
+            Click
+            Sleep, 1000
         }
-    } else {
-        exit
-        ; Don't want macro to continue if 
-    }
+        IfWinActive, Chart Desktop
+            break
+    } 
 }
 
 
@@ -465,15 +456,11 @@ GoCPOEForm(){
     }
 }
 
-ImageMouseMove(imagename, x1:=-2000, y1:=-2000, x2:=0, y2:=0){
+ImageMouseMove(imagename){
     CoordMode, Pixel, Screen
     CoordMode, Mouse, Screen
     ImagePathandName := A_ScriptDir . "\files\" . imagename . ".PNG"
-    if (x1 = -2000 AND y1 = -2000 AND x2 = 0 AND y2 = 0) {
     ImageSearch, FoundX, FoundY, x1, y1, %A_ScreenWidth%, %A_ScreenHeight%, *n20 %ImagePathandName%
-    } else {
-    ImageSearch, FoundX, FoundY, x1, y1, x2, y2, *n10 %ImagePathandName%
-    }
     if (ErrorLevel = 0) {
         MouseMove, %FoundX%, %FoundY%
         CoordMode, Pixel, Window
@@ -482,12 +469,10 @@ ImageMouseMove(imagename, x1:=-2000, y1:=-2000, x2:=0, y2:=0){
     }
     CoordMode, Pixel, Window
     CoordMode, Mouse, Window
-    ; If image is not found, probably do not continue Hotkey that called. 
     if (ErrorLevel = 1) {
         return 0
     }
     if (ErrorLevel = 2) {
-        MsgBox, Missing Image File. 
         return 0
     }
 }
