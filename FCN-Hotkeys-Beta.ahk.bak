@@ -17,6 +17,10 @@ return
     ^Space::Click, 890, 580
 
 
+#IfWinActive, Edit Problem
+    ^Space::Click, 419, 538
+
+
 #IfWinActive, New Problem
     ^Space::Click, 420, 537
     
@@ -268,24 +272,15 @@ AttachmentSign(){
 
 GoChartDesktop(){
     sleep, 500
-    If (ImageMouseMove("chart-desktop")) {
-        Click
-        WinWaitActive, Chart Desktop, , 1
-        if (Errorlevel = 1) {
-            If (ImageMouseMove("chart-desktop")) {
-                Click
-                WinWaitActive, Chart Desktop, , 1
-                if (Errorlevel = 1) {
-                    If (ImageMouseMove("chart-desktop")) {
-                        Click
-                    }
-                }
-            }
+    Loop, 3
+    {
+        If (ImageMouseMove("chart-desktop")) {
+            Click
+            Sleep, 1000
         }
-    } else {
-        exit
-        ; Don't want macro to continue if 
-    }
+        IfWinActive, Chart Desktop
+            break
+    } 
 }
 
 

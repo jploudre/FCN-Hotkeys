@@ -17,6 +17,10 @@ return
     ^Space::Click, 890, 580
 
 
+#IfWinActive, Edit Problem
+    ^Space::Click, 419, 538
+
+
 #IfWinActive, New Problem
     ^Space::Click, 420, 537
     
@@ -469,10 +473,7 @@ ImageMouseMove(imagename){
     }
     CoordMode, Pixel, Window
     CoordMode, Mouse, Window
-    if (ErrorLevel = 1) {
-        return 0
-    }
-    if (ErrorLevel = 2) {
+    if (ErrorLevel >= 1) {
         return 0
     }
 }
