@@ -124,6 +124,10 @@ Setup(){
 
     FirstRun()
     IniRead, Buddy, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
+    FormatTime, login_date,, ShortDate
+    login_telemetry := A_UserName . "," . login_date
+    telemetry_file := "\\fcnjboss01\AHK_Telemetry$\" . A_UserName . ".csv"
+    FileAppend, %login_telemetry%`n, %telemetry_file%
     return
 }
 
