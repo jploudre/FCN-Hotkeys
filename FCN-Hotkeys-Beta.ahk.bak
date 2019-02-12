@@ -109,7 +109,7 @@ Setup(){
     CoordMode, Mouse, Window
     #SingleInstance force
     #Persistent
-    SetKeyDelay, 30
+    SetKeyDelay, 50
 
     Menu, Tray, NoStandard
     Menu, Tray, Add, Edit Buddy, EditBuddy
@@ -124,6 +124,10 @@ Setup(){
 
     FirstRun()
     IniRead, Buddy, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
+    FormatTime, login_date,, ShortDate
+    login_telemetry := A_UserName . "," . login_date
+    telemetry_file := "\\fcnjboss01\AHK_Telemetry$\" . A_UserName . ".csv"
+    FileAppend, %login_telemetry%`n, %telemetry_file%
     return
 }
 
@@ -238,12 +242,12 @@ LetterPrintAndSign(){
 AttachmentCPOEAppend(){
     Keywait, c
     Send !{F4}
-    Sleep, 200
+    Sleep, 400
     IfWinExist, Chart Desktop
         WinActivate, Chart Desktop
     IfWinExist, Chart
         WinActivate, Chart
-    Sleep, 200
+    Sleep, 400
     If (ImageMouseMove("append")) {
         Click
         CreateCPOEAppend()
@@ -256,12 +260,12 @@ AttachmentCPOEAppend(){
 
 AttachmentSign(){
     Send !{F4}
-    Sleep, 200
+    Sleep, 400
     IfWinExist, Chart Desktop
         WinActivate, Chart Desktop
     IfWinExist, Chart
         WinActivate, Chart
-    Sleep, 200
+    Sleep, 400
     If (ImageMouseMove("sign-chart")) {
         Click
     }
@@ -444,11 +448,14 @@ CreateCPOEAppend(){
             if (ErrorLevel = 0) {
                 Sleep, 1000
                 Send, {F8}
-                Sleep, 1000
-                If (ImageMouseMove("CPOE-form")) {
-                    Click, 2
+                Loop, 3
+                {    
+                    Sleep, 1000
+                    If (ImageMouseMove("CPOE-form")) {
+                        Click, 2
+                        Exit
+                    }
                 }
-                Exit
             }
         }
     }
@@ -473,10 +480,7 @@ ImageMouseMove(imagename){
     }
     CoordMode, Pixel, Window
     CoordMode, Mouse, Window
-    if (ErrorLevel = 1) {
-        return 0
-    }
-    if (ErrorLevel = 2) {
+    if (ErrorLevel >= 1) {
         return 0
     }
 }
