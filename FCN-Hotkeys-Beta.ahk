@@ -109,7 +109,7 @@ Setup(){
     CoordMode, Mouse, Window
     #SingleInstance force
     #Persistent
-    SetKeyDelay, 30
+    SetKeyDelay, 100
 
     Menu, Tray, NoStandard
     Menu, Tray, Add, Edit Buddy, EditBuddy
@@ -242,12 +242,12 @@ LetterPrintAndSign(){
 AttachmentCPOEAppend(){
     Keywait, c
     Send !{F4}
-    Sleep, 200
+    Sleep, 400
     IfWinExist, Chart Desktop
         WinActivate, Chart Desktop
     IfWinExist, Chart
         WinActivate, Chart
-    Sleep, 200
+    Sleep, 400
     If (ImageMouseMove("append")) {
         Click
         CreateCPOEAppend()
@@ -260,12 +260,12 @@ AttachmentCPOEAppend(){
 
 AttachmentSign(){
     Send !{F4}
-    Sleep, 200
+    Sleep, 400
     IfWinExist, Chart Desktop
         WinActivate, Chart Desktop
     IfWinExist, Chart
         WinActivate, Chart
-    Sleep, 200
+    Sleep, 400
     If (ImageMouseMove("sign-chart")) {
         Click
     }
@@ -448,11 +448,14 @@ CreateCPOEAppend(){
             if (ErrorLevel = 0) {
                 Sleep, 1000
                 Send, {F8}
-                Sleep, 1000
-                If (ImageMouseMove("CPOE-form")) {
-                    Click, 2
+                Loop, 3
+                {    
+                    Sleep, 1000
+                    If (ImageMouseMove("CPOE-form")) {
+                        Click, 2
+                        Exit
+                    }
                 }
-                Exit
             }
         }
     }

@@ -8,11 +8,23 @@ return
     ^Space::Click, 558, 543
 
 
+#IfWinActive, New Medication
+    ^Space::Click, 686, 659
+
+
 #IfWinActive, Update Prob
     F3::Send !n
     ^Space::Click, 890, 580
 
 
+#IfWinActive, Edit Problem
+    ^Space::Click, 419, 538
+
+
+#IfWinActive, New Problem
+    ^Space::Click, 420, 537
+    
+    
 #IfWinActive, Update Orde
     F3::Click, 650, 237
     ^Space::Click, 549, 641
@@ -33,6 +45,7 @@ return
     	EndUpdate()
         SignUpdateBackToDesktop()
         return
+    !c::GoCPOEForm()
         
 
 #IfWinActive, Care Alert Warning
@@ -50,6 +63,14 @@ return
      ^Space::Send !s
 
 
+#IfWinActive, Forward Flag
+     ^Space::Send !s
+
+
+#IfWinActive, Reply Flag
+     ^Space::Send !s
+
+
 #IfWinActive, Customize Letter
     ^Space::LetterPrintAndSign()
 
@@ -58,17 +79,17 @@ return
     \::Send !r
 
 
-#IfWinActive, Centricity Practice So
+#IfWinActive, Centricity Practice Solution Brow
     \::Send !{F4}
     Space::PatternHotKey(".->BrowserPageDown()", "..->BrowserCloseandSign()")    
-    c::AttachmentCPOEAppend()
+    $c::AttachmentCPOEAppend()
     ^Space::AttachmentSign()
 
 
 #IfWinActive, Chart Deskto
     ;#$Space::PatternHotKey(".->SingleSpace()", "..->DoubleSpace()")
     `::ChartDesktopSwap()
-    c::ChartDesktopCPOEAppend()
+    $c::ChartDesktopCPOEAppend()
         
 
 #IfWinActive, Chart
@@ -81,28 +102,33 @@ return
 ; Hotkey Functions #########################################
 
 Setup(){
-#NoEnv
-SendMode Input
-SetWorkingDir %A_ScriptDir%
-CoordMode, Mouse, Window
-#SingleInstance force
-#Persistent
-SetKeyDelay, 30
+    global
+    #NoEnv
+    SendMode Input
+    SetWorkingDir %A_ScriptDir%
+    CoordMode, Mouse, Window
+    #SingleInstance force
+    #Persistent
+    SetKeyDelay, 30
 
-Menu, Tray, NoStandard
-Menu, Tray, Add, Edit Buddy, EditBuddy
-Menu, Tray, Add, Reload, ReloadScript
-Menu, Tray, Add, Exit, ExitScript
-Menu, Tray, Icon, %SetWorkingDir%\files\favicon.ico
-Menu, Tray, Default, Edit Buddy
+    Menu, Tray, NoStandard
+    Menu, Tray, Add, Edit Buddy, EditBuddy
+    Menu, Tray, Add, Reload, ReloadScript
+    Menu, Tray, Add, Exit, ExitScript
+    Menu, Tray, Icon, %SetWorkingDir%\files\favicon.ico
+    Menu, Tray, Default, Edit Buddy
 
-SplashImage, %SetWorkingDir%\files\FCN-macros.png,B2 FS18 C0, 
-Sleep, 700
-SplashImage, Off
+    SplashImage, %SetWorkingDir%\files\FCN-macros.png,B2 FS18 C0, 
+    Sleep, 700
+    SplashImage, Off
 
-FirstRun()
-IniRead, Buddy, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
-return
+    FirstRun()
+    IniRead, Buddy, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
+    FormatTime, login_date,, ShortDate
+    login_telemetry := A_UserName . "," . login_date
+    telemetry_file := "\\fcnjboss01\AHK_Telemetry$\" . A_UserName . ".csv"
+    FileAppend, %login_telemetry%`n, %telemetry_file%
+    return
 }
 
 FirstRun(){
@@ -138,6 +164,7 @@ InputBox, BuddyName, Who's your Buddy?,
     ), , 300, , , , , , %Buddy%
     if (Errorlevel= 0) {
         IniWrite, %BuddyName%, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
+        Reload
         }
 return
 
@@ -217,9 +244,9 @@ AttachmentCPOEAppend(){
     Send !{F4}
     Sleep, 200
     IfWinExist, Chart Desktop
-    WinActivate, Chart Desktop
+        WinActivate, Chart Desktop
     IfWinExist, Chart
-    WinActivate, Chart
+        WinActivate, Chart
     Sleep, 200
     If (ImageMouseMove("append")) {
         Click
@@ -235,9 +262,9 @@ AttachmentSign(){
     Send !{F4}
     Sleep, 200
     IfWinExist, Chart Desktop
-    WinActivate, Chart Desktop
+        WinActivate, Chart Desktop
     IfWinExist, Chart
-    WinActivate, Chart
+        WinActivate, Chart
     Sleep, 200
     If (ImageMouseMove("sign-chart")) {
         Click
@@ -249,24 +276,15 @@ AttachmentSign(){
 
 GoChartDesktop(){
     sleep, 500
-    If (ImageMouseMove("chart-desktop")) {
-        Click
-        WinWaitActive, Chart Desktop, , 1
-        if (Errorlevel = 1) {
-            If (ImageMouseMove("chart-desktop")) {
-                Click
-                WinWaitActive, Chart Desktop, , 1
-                if (Errorlevel = 1) {
-                    If (ImageMouseMove("chart-desktop")) {
-                        Click
-                    }
-                }
-            }
+    Loop, 3
+    {
+        If (ImageMouseMove("chart-desktop")) {
+            Click
+            Sleep, 1000
         }
-    } else {
-        exit
-        ; Don't want macro to continue if 
-    }
+        IfWinActive, Chart Desktop
+            break
+    } 
 }
 
 
@@ -331,6 +349,8 @@ ChartDesktopCPOEAppend(){
         Click
         CreateCPOEAppend()
         exit
+    } else {
+        send c
     }
 }
 
@@ -341,6 +361,8 @@ ChartCPOEAppend(){
         Click
         CreateCPOEAppend()
         exit
+    } else {
+        send c
     }
 }
 
@@ -436,15 +458,17 @@ CreateCPOEAppend(){
     }
 }
 
-ImageMouseMove(imagename, x1:=-2000, y1:=-2000, x2:=0, y2:=0){
+GoCPOEForm(){
+    If (ImageMouseMove("CPOE-form")) {
+        Click, 2
+    }
+}
+
+ImageMouseMove(imagename){
     CoordMode, Pixel, Screen
     CoordMode, Mouse, Screen
     ImagePathandName := A_ScriptDir . "\files\" . imagename . ".PNG"
-    if (x1 = -2000 AND y1 = -2000 AND x2 = 0 AND y2 = 0) {
     ImageSearch, FoundX, FoundY, x1, y1, %A_ScreenWidth%, %A_ScreenHeight%, *n20 %ImagePathandName%
-    } else {
-    ImageSearch, FoundX, FoundY, x1, y1, x2, y2, *n10 %ImagePathandName%
-    }
     if (ErrorLevel = 0) {
         MouseMove, %FoundX%, %FoundY%
         CoordMode, Pixel, Window
@@ -453,12 +477,7 @@ ImageMouseMove(imagename, x1:=-2000, y1:=-2000, x2:=0, y2:=0){
     }
     CoordMode, Pixel, Window
     CoordMode, Mouse, Window
-    ; If image is not found, probably do not continue Hotkey that called. 
-    if (ErrorLevel = 1) {
-        return 0
-    }
-    if (ErrorLevel = 2) {
-        MsgBox, Missing Image File. 
+    if (ErrorLevel >= 1) {
         return 0
     }
 }
