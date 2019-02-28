@@ -79,6 +79,9 @@ return
     \::Send !r
 
 
+#IfWinActive, Change Medication
+    ^Space::Click, 683, 652
+
 #IfWinActive, Centricity Practice Solution Brow
     \::Send !{F4}
     Space::PatternHotKey(".->BrowserPageDown()", "..->BrowserCloseandSign()")    
@@ -127,8 +130,6 @@ Setup(){
     FormatTime, login_date,, ShortDate
     login_telemetry := A_UserName . "," . login_date
     telemetry_file := "\\fcnjboss01\AHK_Telemetry$\" . A_UserName . ".csv"
-    msgbox, %login_telemetry% -- %telemetry_file%
-    Pause
     FileAppend, %login_telemetry%`n, %telemetry_file%
     return
 }

@@ -75,6 +75,10 @@ return
     ^Space::LetterPrintAndSign()
 
 
+#IfWinActive, Change Medication
+    ^Space::Click, 683, 652
+
+
 #IfWinActive, Route Documen
     \::Send !r
 
@@ -109,7 +113,7 @@ Setup(){
     CoordMode, Mouse, Window
     #SingleInstance force
     #Persistent
-    SetKeyDelay, 50
+    SetKeyDelay, 100
 
     Menu, Tray, NoStandard
     Menu, Tray, Add, Edit Buddy, EditBuddy

@@ -79,6 +79,10 @@ return
     \::Send !r
 
 
+#IfWinActive, Change Medication
+    ^Space::Click, 683, 652
+
+
 #IfWinActive, Centricity Practice Solution Brow
     \::Send !{F4}
     Space::PatternHotKey(".->BrowserPageDown()", "..->BrowserCloseandSign()")    
@@ -390,6 +394,7 @@ EndDouble(){
 
 SendtoBuddy(){
     global 
+    Progress, ZH0 B1 FM48 WM700 CW98df8a,, %Buddy%, , Calibri
     Send !n
     WinWaitActive, New Routing Information, , 3
     if (ErrorLevel = 0) {
@@ -401,12 +406,14 @@ SendtoBuddy(){
         WinWaitActive, End Update, , 3
         if (ErrorLevel =0) {
             Send !o
+	    Progress, Off
             WinWaitActive, Chart, , 15
             if (ErrorLevel = 0) {
                 GoChartDesktop()
             }
         }
     }
+    Progress, Off
 }
 
 SignUpdateBackToDesktop(){

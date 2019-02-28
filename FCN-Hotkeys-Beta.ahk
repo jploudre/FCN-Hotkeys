@@ -75,6 +75,10 @@ return
     ^Space::LetterPrintAndSign()
 
 
+#IfWinActive, Change Medication
+    ^Space::Click, 683, 652
+
+
 #IfWinActive, Route Documen
     \::Send !r
 
@@ -390,6 +394,7 @@ EndDouble(){
 
 SendtoBuddy(){
     global 
+    Progress, ZH0 B1 FM48 WM700 CW98df8a,, %Buddy%, , Calibri
     Send !n
     WinWaitActive, New Routing Information, , 3
     if (ErrorLevel = 0) {
@@ -401,13 +406,16 @@ SendtoBuddy(){
         WinWaitActive, End Update, , 3
         if (ErrorLevel =0) {
             Send !o
+	    Progress, Off
             WinWaitActive, Chart, , 15
             if (ErrorLevel = 0) {
                 GoChartDesktop()
             }
         }
     }
+    Progress, Off
 }
+
 
 SignUpdateBackToDesktop(){
     Send !m
