@@ -75,12 +75,12 @@ return
     ^Space::LetterPrintAndSign()
 
 
-#IfWinActive, Route Documen
-    \::Send !r
-
-
 #IfWinActive, Change Medication
     ^Space::Click, 683, 652
+
+
+#IfWinActive, Route Documen
+    \::Send !r
 
 
 #IfWinActive, Centricity Practice Solution Brow
@@ -99,6 +99,8 @@ return
 #IfWinActive, Chart
     `::ChartSwap()
     c::ChartCPOEAppend()
+    ;r::ChartOpenLetter()
+    F5::ChartNewPhoneNote()
 
 
 #IfWinActive
@@ -113,7 +115,7 @@ Setup(){
     CoordMode, Mouse, Window
     #SingleInstance force
     #Persistent
-    SetKeyDelay, 30
+    SetKeyDelay, 100
 
     Menu, Tray, NoStandard
     Menu, Tray, Add, Edit Buddy, EditBuddy
@@ -246,12 +248,12 @@ LetterPrintAndSign(){
 AttachmentCPOEAppend(){
     Keywait, c
     Send !{F4}
-    Sleep, 200
+    Sleep, 400
     IfWinExist, Chart Desktop
         WinActivate, Chart Desktop
     IfWinExist, Chart
         WinActivate, Chart
-    Sleep, 200
+    Sleep, 400
     If (ImageMouseMove("append")) {
         Click
         CreateCPOEAppend()
@@ -262,14 +264,30 @@ AttachmentCPOEAppend(){
     }
 }
 
+ChartNewPhoneNote(){
+	PixelGetColor, phone_icon, 112, 74
+	if (phone_icon=0x32CD32) { 
+		Click, 112, 74
+		WinWaitActive, Update, , 10
+		if (ErrorLevel = 0) {
+			Sleep, 200
+			Send {Up 2}{Enter}
+			Send .fd{Enter}
+			Sleep, 200
+			Send {Up 6}{Space}
+			exit
+		}
+	}
+}
+
 AttachmentSign(){
     Send !{F4}
-    Sleep, 200
+    Sleep, 400
     IfWinExist, Chart Desktop
         WinActivate, Chart Desktop
     IfWinExist, Chart
         WinActivate, Chart
-    Sleep, 200
+    Sleep, 400
     If (ImageMouseMove("sign-chart")) {
         Click
     }
@@ -291,6 +309,29 @@ GoChartDesktop(){
     } 
 }
 
+
+ChartOpenLetter(){
+keywait, r
+Send ^p
+WinWaitActive, Print, , 5
+if (ErrorLevel = 0) {
+    Sleep, 400
+    Send l
+    Sleep, 400
+    Send {Down 2}
+    Sleep, 400
+    Send {Right 2}
+    Sleep, 400
+    Send l
+    Sleep, 400
+    Send {Down 2}
+    Click, 241, 59
+    Send B
+    Sleep, 400
+    Click, 392, 351
+}
+return
+}
 
 UpdateMeds(){
     Click, 350, 38
@@ -416,6 +457,7 @@ SendtoBuddy(){
     Progress, Off
 }
 
+
 SignUpdateBackToDesktop(){
     Send !m
     Send !m
@@ -455,11 +497,14 @@ CreateCPOEAppend(){
             if (ErrorLevel = 0) {
                 Sleep, 1000
                 Send, {F8}
-                Sleep, 1000
-                If (ImageMouseMove("CPOE-form")) {
-                    Click, 2
+                Loop, 3
+                {    
+                    Sleep, 1000
+                    If (ImageMouseMove("CPOE-form")) {
+                        Click, 2
+                        Exit
+                    }
                 }
-                Exit
             }
         }
     }
