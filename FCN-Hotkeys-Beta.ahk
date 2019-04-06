@@ -99,6 +99,8 @@ return
 #IfWinActive, Chart
     `::ChartSwap()
     c::ChartCPOEAppend()
+    ;r::ChartOpenLetter()
+    F5::ChartNewPhoneNote()
 
 
 #IfWinActive
@@ -262,6 +264,22 @@ AttachmentCPOEAppend(){
     }
 }
 
+ChartNewPhoneNote(){
+	PixelSearch, clickx, clicky, 107, 69, 113, 75, 0x32CD32
+	if not ErrorLevel { 
+		Click, %clickx%, %clicky%
+		WinWaitActive, Update, , 10
+		if (ErrorLevel = 0) {
+			Sleep, 300
+			Send {Up 2}{Enter}
+			Send .fd{Enter}
+			Sleep, 300
+			Send {Up 6}{Space}
+			exit
+		}
+	}
+}
+
 AttachmentSign(){
     Send !{F4}
     Sleep, 400
@@ -291,6 +309,29 @@ GoChartDesktop(){
     } 
 }
 
+
+ChartOpenLetter(){
+keywait, r
+Send ^p
+WinWaitActive, Print, , 5
+if (ErrorLevel = 0) {
+    Sleep, 400
+    Send l
+    Sleep, 400
+    Send {Down 2}
+    Sleep, 400
+    Send {Right 2}
+    Sleep, 400
+    Send l
+    Sleep, 400
+    Send {Down 2}
+    Click, 241, 59
+    Send B
+    Sleep, 400
+    Click, 392, 351
+}
+return
+}
 
 UpdateMeds(){
     Click, 350, 38
@@ -395,10 +436,21 @@ EndDouble(){
 SendtoBuddy(){
     global 
     Progress, ZH0 B1 FM48 WM700 CW98df8a,, %Buddy%, , Calibri
+    Send !m
+    Send !m
+    Send !m
     Send !n
     WinWaitActive, New Routing Information, , 3
     if (ErrorLevel = 0) {
-        Sleep, 100
+	Loop, 3
+	{
+		Click 148, 86
+		Sleep 50
+		Click 182, 95
+		Sleep 50
+	}
+	ControlFocus, Edit1
+	Sleep, 100
         Send %Buddy%
         Sleep, 100
         ; Citrix loses window focus so use tab to go through controls. 

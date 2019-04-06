@@ -94,17 +94,18 @@ return
     ;#$Space::PatternHotKey(".->SingleSpace()", "..->DoubleSpace()")
     `::ChartDesktopSwap()
     $c::ChartDesktopCPOEAppend()
+    $l::send l
         
+
+#IfWinActive
+
 
 #IfWinActive, Chart
     `::ChartSwap()
     c::ChartCPOEAppend()
-    ;r::ChartOpenLetter()
     F5::ChartNewPhoneNote()
-
-
+    l::LettertoCustomize()
 #IfWinActive
-
 ; Hotkey Functions #########################################
 
 Setup(){
@@ -265,15 +266,16 @@ AttachmentCPOEAppend(){
 }
 
 ChartNewPhoneNote(){
-	PixelGetColor, phone_icon, 112, 74
-	if (phone_icon=0x32CD32) { 
-		Click, 112, 74
+	PixelSearch, clickx, clicky, 107, 69, 113, 75, 0x32CD32
+	if not ErrorLevel { 
+		Click, %clickx%, %clicky%
 		WinWaitActive, Update, , 10
 		if (ErrorLevel = 0) {
-			Sleep, 200
+			Sleep, 300
 			Send {Up 2}{Enter}
+			Sleep, 100
 			Send .fd{Enter}
-			Sleep, 200
+			Sleep, 300
 			Send {Up 6}{Space}
 			exit
 		}
@@ -310,28 +312,160 @@ GoChartDesktop(){
 }
 
 
-ChartOpenLetter(){
-keywait, r
-Send ^p
-WinWaitActive, Print, , 5
-if (ErrorLevel = 0) {
-    Sleep, 400
-    Send l
-    Sleep, 400
-    Send {Down 2}
-    Sleep, 400
-    Send {Right 2}
-    Sleep, 400
-    Send l
-    Sleep, 400
-    Send {Down 2}
-    Click, 241, 59
-    Send B
-    Sleep, 400
-    Click, 392, 351
+LettertoCustomize(){
+	global
+	keywait, l
+	WinGetPos, xpos, ypos, winwidth, winheight,Chart
+	GUI -MinimizeBox -MaximizeBox
+	GUI, font, s18 Calibri
+	GUI, margin, 0, 0
+	GUI, add, Listbox, sort x10 y10 w380 h230 gSubmitDoubleClick vLetterName,Blank Letter to Patient|Imaging (Not MBI)|Letters||Results Lab Letter|MBI|Physical Therapy
+	GUI, font, s12 Calibri
+	GUI, Add, Button, x200 y250 w190 Default, Customize Letter
+	GUI, Add, Button, x10 y250 gButtonCancel , Cancel
+	gui, font, s9 Calibri
+	GUI, Add, Text, x10 y223,Hint: Type first letter then enter 
+	guilocationx := xpos + (winwidth//2) - 200
+	guilocationy := ypos + (winheight//2) - 145
+	GUI, show, x%guilocationx% y%guilocationy% w400 h290 ,Letter to Customize:
+}
+
+SubmitDoubleClick:
+if (A_GuiEvent = "Doubleclick"){
+GoSub, ButtonCustomizeLetter
 }
 return
+
+ButtonCancel:
+GUI, Destroy
+exit
+return
+
+GUIclose:
+GUI, Destroy
+exit
+return
+
+ButtonCustomizeLetter:
+GUI, Submit
+GUI, destroy
+if (LetterName = "Blank Letter to Patient"){
+	GoSub, OpenPrintNav
+	if (ErrorLevel = 0) {
+	    Sleep, 400
+	    Send l
+	    Sleep, 400
+	    Send {Down 2}
+	    Sleep, 400
+	    Send {Right 2}
+	    Sleep, 400
+	    Send l
+	    Sleep, 400
+	    Send {Down 2}
+	    Sleep, 400
+	    ControlClick, MLogicListBox1
+	    Sleep, 400
+	    Send B
+	    Sleep, 400
+	    Click, 392, 351
+	}
+	exit
+} else if (lettername = "Imaging (Not MBI)") {
+	GoSub, OpenPrintNav
+	if (ErrorLevel = 0) {
+	    Sleep, 400
+	    Send l
+	    Sleep, 400
+	    Send {Down 2}
+	    Sleep, 400
+	    Send {Right 2}
+	    Sleep, 400
+	Send i
+	}
+	exit
+} else if (lettername = "Results Lab Letter") {
+	GoSub, OpenPrintNav
+	if (ErrorLevel = 0) {
+	    Sleep, 400
+	    Send l
+	    Sleep, 400
+	    Send {Down 2}
+	    Sleep, 400
+	    Send {Right 2}
+	    Sleep, 400
+	    Send l
+	    Sleep, 400
+	    Send {Down 2}
+	    Sleep, 400
+	    ControlClick, MLogicListBox1
+	    Sleep, 400
+	    Send l
+	    Sleep, 400
+	    Click, 392, 351
+	}
+	exit
+} else if (lettername = "MBI") {
+	GoSub, OpenPrintNav
+	if (ErrorLevel = 0) { 
+	    Sleep, 400
+	    Send l
+	    Sleep, 400
+	    Send {Down 2}
+	    Sleep, 400
+	    Send {Right 2}
+	    Sleep, 400
+	Send m
+	    Sleep, 400
+	Send {Down 4}
+	}
+	exit
+} else if (lettername = "Letters") {
+	GoSub, OpenPrintNav
+	if (ErrorLevel = 0) {
+	    Sleep, 400
+	    Send l
+	    Sleep, 400
+	    Send {Down 2}
+	    Sleep, 400
+	    Send {Right 2}
+	    Sleep, 400
+	    Send l
+	    Sleep, 400
+	    Send {Down}
+	    ControlClick, MLogicListBox1
+	    Sleep, 400
+	    Send p
+	    Sleep, 400
+	}
+	exit
+} else if (lettername = "Physical Therapy") {
+	GoSub, OpenPrintNav
+	if (ErrorLevel = 0) {
+	    Sleep, 400
+	    Send l
+	    Sleep, 400
+	    Send {Down 2}
+	    Sleep, 400
+	    Send {Right 2}
+	    Sleep, 400
+	Send p
+	    Sleep, 400
+	Send {Down 5}
+
+	}
+	exit
+} else {
+exit
 }
+return
+
+
+OpenPrintNav:
+WinActivate, Chart
+Sleep, 200
+Send ^p
+WinWaitActive, Print, , 5
+return
 
 UpdateMeds(){
     Click, 350, 38
@@ -435,11 +569,22 @@ EndDouble(){
 
 SendtoBuddy(){
     global 
-    Progress, ZH0 B1 FM48 WM700 CW98df8a,, %Buddy%, , Calibri
+    WinGetPos, xpos, ypos, winwidth, winheight, End Update
+    progressy := ypos + (winheight//2) -30
+    Progress, ZH0 B1 FM36 W%winwidth% H60 X%xpos% Y%progressy% WM700 CW98df8a,, %Buddy%, , Calibri
+    Send !m
+    Send !m
+    Send !m
     Send !n
     WinWaitActive, New Routing Information, , 3
     if (ErrorLevel = 0) {
-        Sleep, 100
+	Sleep 100
+	Click 148, 86
+	Sleep 100
+	Click 182, 95
+	Sleep 100
+	ControlFocus, Edit1
+	Sleep, 200
         Send %Buddy%
         Sleep, 100
         ; Citrix loses window focus so use tab to go through controls. 
@@ -520,7 +665,9 @@ ImageMouseMove(imagename){
     CoordMode, Pixel, Screen
     CoordMode, Mouse, Screen
     ImagePathandName := A_ScriptDir . "\files\" . imagename . ".PNG"
-    ImageSearch, FoundX, FoundY, x1, y1, %A_ScreenWidth%, %A_ScreenHeight%, *n20 %ImagePathandName%
+    SysGet, VirtualWidth, 78
+    SysGet, VirtualHeight, 79
+    ImageSearch, FoundX, FoundY, 0, 0, %VirtualWidth%, %VirtualHeight%, *n20 %ImagePathandName%
     if (ErrorLevel = 0) {
         MouseMove, %FoundX%, %FoundY%
         CoordMode, Pixel, Window
