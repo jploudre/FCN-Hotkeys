@@ -100,18 +100,16 @@ return
 #IfWinActive
 
 
-SetTitleMatchMode, 3
 #IfWinActive, Chart
     `::ChartSwap()
     c::ChartCPOEAppend()
     F5::ChartNewPhoneNote()
     l::LettertoCustomize()
 #IfWinActive
-SetTitleMatchMode, 1
 ; Hotkey Functions #########################################
 
 Setup(){
-    global
+    global telemetry_prefs, telemetry_log, Buddy
     #NoEnv
     SendMode Input
     SetWorkingDir %A_ScriptDir%
@@ -131,38 +129,43 @@ Setup(){
     Sleep, 700
     SplashImage, Off
 
-    FirstRun()
-    IniRead, Buddy, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
-    FormatTime, login_date,, ShortDate
-    login_telemetry := A_UserName . "," . login_date
-    telemetry_file := "\\fcnjboss01\AHK_Telemetry$\" . A_UserName . ".csv"
-    FileAppend, %login_telemetry%`n, %telemetry_file%
-    return
-}
+    telemetry_folder := "\\fcnjboss01\AHK_Telemetry$\" 
+    telemetry_prefs := telemetry_folder . A_UserName . "-Preferences.ini"
+    telemetry_log := telemetry_folder . A_UserName . "-Log.csv"
 
-FirstRun(){
-IfNotExist, Z:\FCN-Macro-Settings.ini
+    IfNotExist, %telemetry_prefs%
     {
-    InputBox, BuddyName, Who's your Buddy?,
-    (
-
-    Who do you 'hold' things to most frequently
-    in Centricity?
-
-    Typically this might be your CAs last name...
-    ), , 300, , , , , , 
-    if (Errorlevel= 0) {
-        IniWrite, %BuddyName%, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
-        SplashImage, %SetWorkingDir%\files\edit-buddy-help.png, B2 ZH200 ZW-1 FM24 FS18 C0, Later look for the FCN Logo to change your buddy., Thanks!
-        Sleep 8000
-        SplashImage, Off
+	IfExist, Z:\FCN-Macro-Settings.ini
+	{
+		IniRead, Buddy, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
+		IniWrite, %Buddy%, %telemetry_prefs%, Preferences, Buddy
+	}
+	IfNotExist, Z:\FCN-Macro-Settings.ini
+        {
+        InputBox, BuddyName, Who's your Buddy?,
+        (
+    
+        Who do you 'hold' things to most frequently
+        in Centricity?
+    
+        Typically this might be your CAs last name...
+        ), , 300, , , , , , 
+        if (Errorlevel= 0) {
+		IniWrite, %BuddyName%, %telemetry_prefs%, Preferences, Buddy
+		SplashImage, %SetWorkingDir%\files\edit-buddy-help.png, B2 ZH200 ZW-1 FM24 FS18 C0, Later look for the FCN Logo to change your buddy., Thanks!
+		Sleep 8000
+		SplashImage, Off
+    	}
         }
+    } else {
+	IniRead, Buddy, %telemetry_prefs%, Preferences, Buddy
     }
 }
-return
 
 EditBuddy:
-IniRead, Buddy, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
+global Buddy, telemetry_prefs
+
+IniRead, Buddy, %telemetry_prefs%, Preferences, Buddy
 InputBox, BuddyName, Who's your Buddy?,
     (
 
@@ -172,7 +175,7 @@ InputBox, BuddyName, Who's your Buddy?,
     Typically this might be your CAs last name...
     ), , 300, , , , , , %Buddy%
     if (Errorlevel= 0) {
-        IniWrite, %BuddyName%, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
+        IniWrite, %BuddyName%, %telemetry_prefs%, Preferences, Buddy
         Reload
         }
 return
@@ -275,6 +278,7 @@ ChartNewPhoneNote(){
 		if (ErrorLevel = 0) {
 			Sleep, 300
 			Send {Up 2}{Enter}
+			Sleep, 100
 			Send .fd{Enter}
 			Sleep, 300
 			Send {Up 6}{Space}
@@ -314,7 +318,6 @@ GoChartDesktop(){
 
 
 LettertoCustomize(){
-	global
 	keywait, l
 	WinGetPos, xpos, ypos, winwidth, winheight,Chart
 	GUI -MinimizeBox -MaximizeBox
@@ -460,9 +463,6 @@ exit
 }
 return
 
-ChartOpenLetter(){
-keywait, r
-}
 
 OpenPrintNav:
 WinActivate, Chart
@@ -572,7 +572,7 @@ EndDouble(){
 }
 
 SendtoBuddy(){
-    global 
+    global Buddy
     WinGetPos, xpos, ypos, winwidth, winheight, End Update
     progressy := ypos + (winheight//2) -30
     Progress, ZH0 B1 FM36 W%winwidth% H60 X%xpos% Y%progressy% WM700 CW98df8a,, %Buddy%, , Calibri
@@ -669,7 +669,9 @@ ImageMouseMove(imagename){
     CoordMode, Pixel, Screen
     CoordMode, Mouse, Screen
     ImagePathandName := A_ScriptDir . "\files\" . imagename . ".PNG"
-    ImageSearch, FoundX, FoundY, x1, y1, %A_ScreenWidth%, %A_ScreenHeight%, *n20 %ImagePathandName%
+    SysGet, VirtualWidth, 78
+    SysGet, VirtualHeight, 79
+    ImageSearch, FoundX, FoundY, 0, 0, %VirtualWidth%, %VirtualHeight%, *n20 %ImagePathandName%
     if (ErrorLevel = 0) {
         MouseMove, %FoundX%, %FoundY%
         CoordMode, Pixel, Window
@@ -805,4 +807,3 @@ KeyPressPattern(length = 2, period = 0.2)
         }
     }
 }
-
