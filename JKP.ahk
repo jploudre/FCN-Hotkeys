@@ -131,7 +131,7 @@ Setup(){
 
     telemetry_folder := "\\fcnjboss01\AHK_Telemetry$\" 
     telemetry_prefs := telemetry_folder . A_UserName . "-Preferences.ini"
-    telemetry_log := telemetry_folder . A_UserName . "-Log.csv"
+    telemetry_log := telemetry_folder . A_UserName . "-Usage.csv"
 
     IfNotExist, %telemetry_prefs%
     {
@@ -160,7 +160,14 @@ Setup(){
     } else {
 	IniRead, Buddy, %telemetry_prefs%, Preferences, Buddy
     }
+    ifNotExist, %telemetry_log%
+    {
+    LogFileHeaders := "Year,Month,Day,Hour,User,Function,Label,Hotkey,Error"
+    FileAppend, %LogFileHeaders%`n, %telemetry_log%
+    }
+    Return
 }
+
 
 EditBuddy:
 global Buddy, telemetry_prefs
@@ -180,18 +187,32 @@ InputBox, BuddyName, Who's your Buddy?,
         }
 return
 
+
 ExitScript:
 ExitApp
 return
+
 
 ReloadScript:
 Reload
 Return
 
+
+LogUsage(Function, Error=""){
+global telemetry_log
+ifExist, %telemetry_log% 
+{
+	line_to_log := A_YYYY . "," A_MM . "," A_DD . "," A_Hour . "," A_UserName . "," Function . "," A_ThisLabel . "," A_ThisHotkey . "," Error
+	FileAppend, %line_to_log%`n, %telemetry_log%
+}
+}
+
+
 SwitchDocumentFocus(){
     ControlGetFocus, chartfocus
     if (chartfocus = "SysTreeView322") {
         ControlFocus, "SftTreeControl701"
+	Sleep, 200
     }
 }
 
@@ -203,6 +224,11 @@ OrderSearch(){
         Click, 263, 269
         sleep, 150
         Click 406, 313
+	LogUsage("OrderSearch()")
+	exit
+    } else {
+	LogUsage("OrderSearch()", "Update Orders Window did not open")
+	exit
     }
 }
 
@@ -211,7 +237,10 @@ MedSearch(){
     WinWaitActive, Update Medications, , 3
     if (ErrorLevel = 0) {
         UpdateMedSearch()
-    }
+    } else {
+    	LogUsage("MedSearch()", "Update Medications window did not open")
+	exit
+	}
 }
 
 UpdateMedSearch(){
@@ -222,9 +251,16 @@ UpdateMedSearch(){
         sleep, 150
         Click, 712, 65
         WinWaitActive, Find Medication, , 5
-        If (ErrorLevel = 1) {
-        exit
+	if (ErrorLevel = 0) {
+	LogUsage("UpdateMedSearch()")
+	exit
+	} else If (ErrorLevel = 1) {
+        LogUsage("UpdateMedSearch()" ,"Find Medication Window didn't open")
+	exit
         }
+    } else {
+	LogUsage("UpdateMedSearch()", "New Medication Window didn't open")
+	exit
     }
 }
 
@@ -245,9 +281,21 @@ LetterPrintAndSign(){
                 if (ErrorLevel = 0) {
                     Sleep, 100
                     Click 568, 355
-                }	
-            }
-        }
+		    LogUsage("LetterPrintAndSign()")
+                } else {
+		LogUsage("LetterPrintAndSign()" ,"Print Window didn't open")
+		exit
+		}
+            }  else {
+		LogUsage("LetterPrintAndSign()", "Route Document Window didn't open ")
+		exit
+		}
+
+        }  else {
+		LogUsage("LetterPrintAndSign()", "Customize Letter Window didn't open")
+		exit
+		}
+
     }
 }
 
@@ -312,8 +360,12 @@ GoChartDesktop(){
             Sleep, 1000
         }
         IfWinActive, Chart Desktop
-            break
+	{
+	    LogUsage("GoChartDesktop()")
+    	    exit
+	    }
     } 
+    LogUsage("GoChartDesktop()","chart-desktop image not found")
 }
 
 
@@ -592,16 +644,22 @@ SendtoBuddy(){
         Send %Buddy%
         Sleep, 100
         ; Citrix loses window focus so use tab to go through controls. 
-        Send {Enter}{Tab 9}{Enter}
+        Send {Enter}
+	Sleep, 100
+	ControlClick, Button9, New Routing Information
         WinWaitActive, End Update, , 3
         if (ErrorLevel =0) {
             Send !o
 	    Progress, Off
             WinWaitActive, Chart, , 15
             if (ErrorLevel = 0) {
+		LogUsage("SendtoBuddy()")
                 GoChartDesktop()
             }
-        }
+        } else {
+		LogUsage("SendtoBuddy()", "End Update window didn't open")
+		exit
+	}
     }
     Progress, Off
 }
