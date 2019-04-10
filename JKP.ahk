@@ -316,17 +316,42 @@ AttachmentCPOEAppend(){
     Send !{F4}
     Sleep, 400
     IfWinExist, Chart Desktop
+	{
         WinActivate, Chart Desktop
+	WinWaitActive, Chart Desktop, ,5
+	if (ErrorLevel = 0 ) {
+		Sleep 400
+	    If (ImageMouseMove("append")) {
+		Click
+		LogUsage("AttachmentCPOEAppend()")
+		CreateCPOEAppend()
+	    } else {
+	    	LogUsage("AttachmentCPOEAppend()", "Append Image not found")
+		exit
+	    }
+	} else {
+		LogUsage("AttachmentCPOEAppend()", "Chart Desktop didn't activate")
+		exit
+	}
+	}
     IfWinExist, Chart
+    {
         WinActivate, Chart
-    Sleep, 400
-    If (ImageMouseMove("append")) {
-        Click
-        CreateCPOEAppend()
-    }
-    if (imageMouseMove("append-chart")) {
-        Click
-        CreateCPOEAppend()
+    	WinWaitActive, Chart, , 5
+	if (Errorlevel = 0) {
+	    Sleep, 400
+	    if (imageMouseMove("append-chart")) {
+		Click
+		LogUsage("AttachmentCPOEAppend()")
+		CreateCPOEAppend()
+	    } else {
+	    	LogUsage("AttachmentCPOEAppend()", "append-chart image not found")
+		exit
+		}
+	} else {
+		LogUsage("AttachmentCPOEAppend()", "Chart didn't activate")
+		exit
+	}
     }
 }
 
@@ -343,23 +368,57 @@ ChartNewPhoneNote(){
 			Sleep, 300
 			Send {Up 6}{Space}
 			exit
+		} else {
+			LogUsage("ChartNewPhoneNote()","Update didn't activate")
+			exit
+			}
+	} else {
+		LogUsage("ChartNewPhoneNote()", "Didn't find green pixel color")
+		exit
 		}
-	}
 }
 
 AttachmentSign(){
     Send !{F4}
     Sleep, 400
     IfWinExist, Chart Desktop
-        WinActivate, Chart Desktop
-    IfWinExist, Chart
-        WinActivate, Chart
-    Sleep, 400
-    If (ImageMouseMove("sign-chart")) {
-        Click
+    {
+	WinActivate, Chart Desktop
+    	WinWaitActive, Chart Desktop, , 5
+	If (Errorlevel = 0) {
+		Sleep, 500
+		
+	    if (imageMouseMove("sign-chart-desktop")) {
+		Click
+		LogUsage("AttachmentSign()")
+		exit
+	    } else {
+		LogUsage("AttachmentSign()","sign-chart-desktop image not found")
+		exit
+	    }
+	} else {
+		LogUsage("AttachmentSign()", "Chart Desktop didn't activate")
+		exit
+	}
     }
-    if (imageMouseMove("sign-chart-desktop")) {
-        Click
+    IfWinExist, Chart
+    {
+        WinActivate, Chart
+	WinWaitActive, Chart, , 5
+	if (Errorlevel = 0) {
+	    Sleep, 500
+	    If (ImageMouseMove("sign-chart")) {
+		Click
+		LogUsage("AttachmentSign()")
+		exit
+	    } else {
+	    	LogUsage("AttachmentSign()", "sign-chart image not found")
+		exit
+		}
+    } else {
+	LogUsage("AttachmentSign()", "Chart didn't activate")
+	exit
+    }
     }
 }
 
@@ -543,13 +602,31 @@ ProblemSearch(){
     Click, 428, 38
     WinWaitActive, Update Problems, , 3
     if (ErrorLevel = 0) {
-        sleep, 150
+        sleep, 250
         Send !n
+	WinwaitActive, New Problem, ,5
+	if (Errorlevel = 0) {
+		LogUsage("ProblemSearch()")
+		exit
+	} else {
+		LogUsage("ProblemSearch()", "New Problem didn't open")
+		exit
+	}
+    } else {
+	LogUsage("ProblemSearch()", "Update Problems didn't open")
+	exit
     }
 }
 
 UpdateProblems(){
     Click, 428, 38
+    WinWaitActive, Update Problems, , 3
+    if (ErrorLevel = 0) {
+	LogUsage("UpdateProblems()")
+	exit
+    } else {
+	LogUsage("UpdateProblems()", "Update Problems didn't open")
+    }
 }
 
 BrowserPageDown(){
@@ -564,26 +641,56 @@ BrowserCloseandSign(){
     Sleep, 500
     If WinExist("Chart Desktop"){
         WinActivate, Chart Desktop
-        sleep, 150
-        If (ImageMouseMove("sign-chart-desktop")) {
-            Click
-        }
+	WinWaitActive, Chart Desktop, , 5
+	{
+        	sleep, 150
+        	If (ImageMouseMove("sign-chart-desktop")) {
+			Click
+			LogUsage("BrowserCloseandSign()")
+			exit
+        } else {
+		LogUsage("BrowserCloseandSign()", "sign-chart-desktop image not found")
+		exit
+	}
+	} else {
+		LogUsage("BrowserCloseandSign()", "Chart Desktop didn't activate")
+		exit
+	}
     }
 }
 
 ChartDesktopSwap(){
     If WinExist("Update") { 
         WinActivate, Update
+	WinWaitActive, Update, ,5
+	if (Errorlevel = 0) {
+		LogUsage("ChartDesktopSwap()")
+		Exit
+	} else {
+		LogUsage("ChartDesktopSwap()","Update didn't activate")
+	}
     } else {
         If (ImageMouseMove("chart")) {
             Click
-        }
+	    LogUsage("ChartDesktopSwap()")
+	    exit
+        } else {
+		LogUsage("ChartDesktopSwap()", "chart image not found")
+	}
     } 
 }
 
 ChartSwap(){
     If WinExist("Update") { 
         WinActivate, Update
+	WinWaitActive, Update, , 5
+	if (Errorlevel = 0) {
+		LogUsage("ChartSwap()")
+		exit
+	} else {
+		LogUsage("ChartSwap()", "Update didn't activate")
+		exit
+	}
     } else {
         GoChartDesktop()
     }
@@ -628,7 +735,10 @@ EndDouble(){
         WinWaitActive, End Update, , 5
         if (ErrorLevel = 0) {
             SendtoBuddy()
-        }
+        } else {
+		LogUsage("EndDouble()", "End Update didn't open")
+		exit
+	}
     } 
     else If WinActive("End Update") {
         SendtoBuddy()
@@ -646,32 +756,40 @@ SendtoBuddy(){
     Send !n
     WinWaitActive, New Routing Information, , 3
     if (ErrorLevel = 0) {
-	Sleep 100
+	Sleep 200
 	Click 148, 86
-	Sleep 100
+	Sleep 200
 	Click 182, 95
-	Sleep 100
+	Sleep 200
 	ControlFocus, Edit1
 	Sleep, 200
         Send %Buddy%
-        Sleep, 100
-        ; Citrix loses window focus so use tab to go through controls. 
+        Sleep, 200
         Send {Enter}
-	Sleep, 100
+	Sleep, 200
 	ControlClick, Button9, New Routing Information
         WinWaitActive, End Update, , 3
-        if (ErrorLevel =0) {
+        if (ErrorLevel = 0) {
             Send !o
 	    Progress, Off
             WinWaitActive, Chart, , 15
             if (ErrorLevel = 0) {
 		LogUsage("SendtoBuddy()")
                 GoChartDesktop()
-            }
+            } else {
+		LogUsage("SendtoBuddy()", "Chart didn't activate")
+		Progress, Off
+		exit
+	    }
         } else {
 		LogUsage("SendtoBuddy()", "End Update window didn't open")
+		Progress, Off
 		exit
 	}
+    } else {
+	Progress, Off
+	LogUsage("SendtoBuddy()", "New Routing Information didn't open")
+	exit
     }
     Progress, Off
 }
@@ -685,7 +803,11 @@ SignUpdateBackToDesktop(){
     Send !s
     WinWaitActive, Chart, , 15
     if (ErrorLevel = 0) {
+    	LogUsage("SignUpdateBackToDesktop()")
         GoChartDesktop()
+    } else {
+	LogUsage("SignUpdateBackToDesktop()", "Chart didn't activate")
+	exit
     }
 }
 
@@ -721,17 +843,34 @@ CreateCPOEAppend(){
                     Sleep, 1000
                     If (ImageMouseMove("CPOE-form")) {
                         Click, 2
+			LogUsage("CreateCPOEAppend()")
                         Exit
                     }
-                }
-            }
-        }
+		    }
+		    LogUsage("CreateCPOEAppend()", "CPOE-form image not found")
+		    exit
+                } else {
+			LogUsage("CreateCPOEAppend()", "Update didn't activate")
+			exit
+		}
+            } else {
+		LogUsage("CreateCPOEAppend()", "Append document didn't activate")
+		exit
+	    }
+        } else {
+		LogUsage("CreateCPOEAppend()", "Append to didn't activate")
+		exit
+	}
     }
-}
 
 GoCPOEForm(){
     If (ImageMouseMove("CPOE-form")) {
         Click, 2
+	LogUsage("GoCPOEForm()")
+	exit
+    } else {
+	LogUsage("GoCPOEForm()", "CPOE-Form image not found")
+	exit
     }
 }
 
