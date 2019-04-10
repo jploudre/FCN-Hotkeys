@@ -676,6 +676,7 @@ ChartDesktopSwap(){
 	    exit
         } else {
 		LogUsage("ChartDesktopSwap()", "chart image not found")
+		exit
 	}
     } 
 }
