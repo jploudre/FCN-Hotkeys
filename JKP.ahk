@@ -109,7 +109,7 @@ return
 ; Hotkey Functions #########################################
 
 Setup(){
-    global telemetry_prefs, telemetry_log, Buddy
+    global telemetry_prefs, telemetry_log, Buddy, enable_logging
     #NoEnv
     SendMode Input
     SetWorkingDir %A_ScriptDir%
@@ -132,6 +132,7 @@ Setup(){
     telemetry_folder := "\\fcnjboss01\AHK_Telemetry$\" 
     telemetry_prefs := telemetry_folder . A_UserName . "-Preferences.ini"
     telemetry_log := telemetry_folder . A_UserName . "-Usage.csv"
+    enable_logging := True
 
     IfNotExist, %telemetry_prefs%
     {
@@ -162,7 +163,7 @@ Setup(){
     }
     ifNotExist, %telemetry_log%
     {
-    LogFileHeaders := "Year,Month,Day,Hour,User,Function,Label,Hotkey,Error"
+    LogFileHeaders := "Year,Month,Day,Hour,User,Hotkey,Function,Error"
     FileAppend, %LogFileHeaders%`n, %telemetry_log%
     }
     Return
@@ -199,11 +200,13 @@ Return
 
 
 LogUsage(Function, Error=""){
-global telemetry_log
+global telemetry_log, enable_logging
 ifExist, %telemetry_log% 
 {
-	line_to_log := A_YYYY . "," A_MM . "," A_DD . "," A_Hour . "," A_UserName . "," Function . "," A_ThisLabel . "," A_ThisHotkey . "," Error
-	FileAppend, %line_to_log%`n, %telemetry_log%
+    if (enable_logging = True) {
+        line_to_log := A_YYYY . "," A_MM . "," A_DD . "," A_Hour . "," A_UserName . "," A_ThisHotkey . "," Function . "," Error
+        FileAppend, %line_to_log%`n, %telemetry_log%
+    }
 }
 }
 
@@ -224,8 +227,8 @@ OrderSearch(){
         Click, 263, 269
         sleep, 150
         Click 406, 313
-	LogUsage("OrderSearch()")
-	exit
+        LogUsage("OrderSearch()")
+        exit
     } else {
 	LogUsage("OrderSearch()", "Update Orders Window did not open")
 	exit
@@ -236,6 +239,7 @@ MedSearch(){
     Click, 350, 38
     WinWaitActive, Update Medications, , 3
     if (ErrorLevel = 0) {
+        LogUsage("MedSearch()")
         UpdateMedSearch()
     } else {
     	LogUsage("MedSearch()", "Update Medications window did not open")
@@ -251,12 +255,12 @@ UpdateMedSearch(){
         sleep, 150
         Click, 712, 65
         WinWaitActive, Find Medication, , 5
-	if (ErrorLevel = 0) {
-	LogUsage("UpdateMedSearch()")
-	exit
-	} else If (ErrorLevel = 1) {
-        LogUsage("UpdateMedSearch()" ,"Find Medication Window didn't open")
-	exit
+        if (ErrorLevel = 0) {
+            LogUsage("UpdateMedSearch()")
+            exit
+        } else If (ErrorLevel = 1) {
+            LogUsage("UpdateMedSearch()" ,"Find Medication Window didn't open")
+            exit
         }
     } else {
 	LogUsage("UpdateMedSearch()", "New Medication Window didn't open")
@@ -281,21 +285,29 @@ LetterPrintAndSign(){
                 if (ErrorLevel = 0) {
                     Sleep, 100
                     Click 568, 355
-		    LogUsage("LetterPrintAndSign()")
+                    WinWaitActive, Chart, , 5
+                    if (ErrorLevel = 0) {
+                        LogUsage("LetterPrintAndSign()")
+                        Exit
+                    } else {
+                        LogUsage("LetterPrintAndSign()", "Chart did not activate")
+                        Exit
+                    } 
                 } else {
-		LogUsage("LetterPrintAndSign()" ,"Print Window didn't open")
-		exit
-		}
+                    LogUsage("LetterPrintAndSign()" ,"Print Window didn't open")
+                    exit
+                }
             }  else {
-		LogUsage("LetterPrintAndSign()", "Route Document Window didn't open ")
-		exit
-		}
-
+                LogUsage("LetterPrintAndSign()", "Route Document Window didn't open ")
+                exit
+            }
         }  else {
-		LogUsage("LetterPrintAndSign()", "Customize Letter Window didn't open")
-		exit
+            LogUsage("LetterPrintAndSign()", "Customize Letter Window didn't open")
+            exit
 		}
-
+    } else {
+        LogUsage("LetterPrintAndSign()", "Customize Letter Window didn't close")
+        exit
     }
 }
 
