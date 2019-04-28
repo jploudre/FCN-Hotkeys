@@ -94,22 +94,21 @@ return
     ;#$Space::PatternHotKey(".->SingleSpace()", "..->DoubleSpace()")
     `::ChartDesktopSwap()
     $c::ChartDesktopCPOEAppend()
-    $l::send l
         
-
-#IfWinActive
-
 
 #IfWinActive, Chart
     `::ChartSwap()
     c::ChartCPOEAppend()
+    ;r::ChartOpenLetter()
     F5::ChartNewPhoneNote()
-    l::LettertoCustomize()
+
+
 #IfWinActive
+
 ; Hotkey Functions #########################################
 
 Setup(){
-    global telemetry_prefs, telemetry_log, Buddy, enable_logging
+    global
     #NoEnv
     SendMode Input
     SetWorkingDir %A_ScriptDir%
@@ -129,51 +128,38 @@ Setup(){
     Sleep, 700
     SplashImage, Off
 
-    telemetry_folder := "\\fcnjboss01\AHK_Telemetry$\" 
-    telemetry_prefs := telemetry_folder . A_UserName . "-Preferences.ini"
-    telemetry_log := telemetry_folder . A_UserName . "-Usage.csv"
-    enable_logging := True
-
-    IfNotExist, %telemetry_prefs%
-    {
-	IfExist, Z:\FCN-Macro-Settings.ini
-	{
-		IniRead, Buddy, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
-		IniWrite, %Buddy%, %telemetry_prefs%, Preferences, Buddy
-	}
-	IfNotExist, Z:\FCN-Macro-Settings.ini
-        {
-        InputBox, BuddyName, Who's your Buddy?,
-        (
-    
-        Who do you 'hold' things to most frequently
-        in Centricity?
-    
-        Typically this might be your CAs last name...
-        ), , 300, , , , , , 
-        if (Errorlevel= 0) {
-		IniWrite, %BuddyName%, %telemetry_prefs%, Preferences, Buddy
-		SplashImage, %SetWorkingDir%\files\edit-buddy-help.png, B2 ZH200 ZW-1 FM24 FS18 C0, Later look for the FCN Logo to change your buddy., Thanks!
-		Sleep 8000
-		SplashImage, Off
-    	}
-        }
-    } else {
-	IniRead, Buddy, %telemetry_prefs%, Preferences, Buddy
-    }
-    ifNotExist, %telemetry_log%
-    {
-    LogFileHeaders := "Year,Month,Day,Hour,User,Hotkey,Function,Error"
-    FileAppend, %LogFileHeaders%`n, %telemetry_log%
-    }
-    Return
+    FirstRun()
+    IniRead, Buddy, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
+    FormatTime, login_date,, ShortDate
+    login_telemetry := A_UserName . "," . login_date
+    telemetry_file := "\\fcnjboss01\AHK_Telemetry$\" . A_UserName . ".csv"
+    FileAppend, %login_telemetry%`n, %telemetry_file%
+    return
 }
 
+FirstRun(){
+IfNotExist, Z:\FCN-Macro-Settings.ini
+    {
+    InputBox, BuddyName, Who's your Buddy?,
+    (
+
+    Who do you 'hold' things to most frequently
+    in Centricity?
+
+    Typically this might be your CAs last name...
+    ), , 300, , , , , , 
+    if (Errorlevel= 0) {
+        IniWrite, %BuddyName%, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
+        SplashImage, %SetWorkingDir%\files\edit-buddy-help.png, B2 ZH200 ZW-1 FM24 FS18 C0, Later look for the FCN Logo to change your buddy., Thanks!
+        Sleep 8000
+        SplashImage, Off
+        }
+    }
+}
+return
 
 EditBuddy:
-global Buddy, telemetry_prefs
-
-IniRead, Buddy, %telemetry_prefs%, Preferences, Buddy
+IniRead, Buddy, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
 InputBox, BuddyName, Who's your Buddy?,
     (
 
@@ -183,39 +169,23 @@ InputBox, BuddyName, Who's your Buddy?,
     Typically this might be your CAs last name...
     ), , 300, , , , , , %Buddy%
     if (Errorlevel= 0) {
-        IniWrite, %BuddyName%, %telemetry_prefs%, Preferences, Buddy
+        IniWrite, %BuddyName%, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
         Reload
         }
 return
-
 
 ExitScript:
 ExitApp
 return
 
-
 ReloadScript:
 Reload
 Return
-
-
-LogUsage(Function, Error=""){
-global telemetry_log, enable_logging
-ifExist, %telemetry_log% 
-{
-    if (enable_logging = True) {
-        line_to_log := A_YYYY . "," A_MM . "," A_DD . "," A_Hour . "," A_UserName . "," A_ThisHotkey . "," Function . "," Error
-        FileAppend, %line_to_log%`n, %telemetry_log%
-    }
-}
-}
-
 
 SwitchDocumentFocus(){
     ControlGetFocus, chartfocus
     if (chartfocus = "SysTreeView322") {
         ControlFocus, "SftTreeControl701"
-	Sleep, 200
     }
 }
 
@@ -227,11 +197,6 @@ OrderSearch(){
         Click, 263, 269
         sleep, 150
         Click 406, 313
-        LogUsage("OrderSearch()")
-        exit
-    } else {
-	LogUsage("OrderSearch()", "Update Orders Window did not open")
-	exit
     }
 }
 
@@ -239,12 +204,8 @@ MedSearch(){
     Click, 350, 38
     WinWaitActive, Update Medications, , 3
     if (ErrorLevel = 0) {
-        LogUsage("MedSearch()")
         UpdateMedSearch()
-    } else {
-    	LogUsage("MedSearch()", "Update Medications window did not open")
-	exit
-	}
+    }
 }
 
 UpdateMedSearch(){
@@ -255,16 +216,9 @@ UpdateMedSearch(){
         sleep, 150
         Click, 712, 65
         WinWaitActive, Find Medication, , 5
-        if (ErrorLevel = 0) {
-            LogUsage("UpdateMedSearch()")
-            exit
-        } else If (ErrorLevel = 1) {
-            LogUsage("UpdateMedSearch()" ,"Find Medication Window didn't open")
-            exit
+        If (ErrorLevel = 1) {
+        exit
         }
-    } else {
-	LogUsage("UpdateMedSearch()", "New Medication Window didn't open")
-	exit
     }
 }
 
@@ -285,29 +239,9 @@ LetterPrintAndSign(){
                 if (ErrorLevel = 0) {
                     Sleep, 100
                     Click 568, 355
-                    WinWaitActive, Chart, , 5
-                    if (ErrorLevel = 0) {
-                        LogUsage("LetterPrintAndSign()")
-                        Exit
-                    } else {
-                        LogUsage("LetterPrintAndSign()", "Chart did not activate")
-                        Exit
-                    } 
-                } else {
-                    LogUsage("LetterPrintAndSign()" ,"Print Window didn't open")
-                    exit
-                }
-            }  else {
-                LogUsage("LetterPrintAndSign()", "Route Document Window didn't open ")
-                exit
+                }	
             }
-        }  else {
-            LogUsage("LetterPrintAndSign()", "Customize Letter Window didn't open")
-            exit
-		}
-    } else {
-        LogUsage("LetterPrintAndSign()", "Customize Letter Window didn't close")
-        exit
+        }
     }
 }
 
@@ -316,42 +250,17 @@ AttachmentCPOEAppend(){
     Send !{F4}
     Sleep, 400
     IfWinExist, Chart Desktop
-	{
         WinActivate, Chart Desktop
-	WinWaitActive, Chart Desktop, ,5
-	if (ErrorLevel = 0 ) {
-		Sleep 400
-	    If (ImageMouseMove("append")) {
-		Click
-		LogUsage("AttachmentCPOEAppend()")
-		CreateCPOEAppend()
-	    } else {
-	    	LogUsage("AttachmentCPOEAppend()", "Append Image not found")
-		exit
-	    }
-	} else {
-		LogUsage("AttachmentCPOEAppend()", "Chart Desktop didn't activate")
-		exit
-	}
-	}
     IfWinExist, Chart
-    {
         WinActivate, Chart
-    	WinWaitActive, Chart, , 5
-	if (Errorlevel = 0) {
-	    Sleep, 400
-	    if (imageMouseMove("append-chart")) {
-		Click
-		LogUsage("AttachmentCPOEAppend()")
-		CreateCPOEAppend()
-	    } else {
-	    	LogUsage("AttachmentCPOEAppend()", "append-chart image not found")
-		exit
-		}
-	} else {
-		LogUsage("AttachmentCPOEAppend()", "Chart didn't activate")
-		exit
-	}
+    Sleep, 400
+    If (ImageMouseMove("append")) {
+        Click
+        CreateCPOEAppend()
+    }
+    if (imageMouseMove("append-chart")) {
+        Click
+        CreateCPOEAppend()
     }
 }
 
@@ -363,63 +272,27 @@ ChartNewPhoneNote(){
 		if (ErrorLevel = 0) {
 			Sleep, 300
 			Send {Up 2}{Enter}
-			Sleep, 100
 			Send .fd{Enter}
 			Sleep, 300
 			Send {Up 6}{Space}
-			LogUsage("ChartNewPhoneNote()")
 			exit
-		} else {
-			LogUsage("ChartNewPhoneNote()","Update didn't activate")
-			exit
-			}
-	} else {
-		LogUsage("ChartNewPhoneNote()", "Didn't find green pixel color")
-		exit
 		}
+	}
 }
 
 AttachmentSign(){
     Send !{F4}
     Sleep, 400
     IfWinExist, Chart Desktop
-    {
-	WinActivate, Chart Desktop
-    	WinWaitActive, Chart Desktop, , 5
-	If (Errorlevel = 0) {
-		Sleep, 500
-		
-	    if (imageMouseMove("sign-chart-desktop")) {
-		Click
-		LogUsage("AttachmentSign()")
-		exit
-	    } else {
-		LogUsage("AttachmentSign()","sign-chart-desktop image not found")
-		exit
-	    }
-	} else {
-		LogUsage("AttachmentSign()", "Chart Desktop didn't activate")
-		exit
-	}
-    }
+        WinActivate, Chart Desktop
     IfWinExist, Chart
-    {
         WinActivate, Chart
-	WinWaitActive, Chart, , 5
-	if (Errorlevel = 0) {
-	    Sleep, 500
-	    If (ImageMouseMove("sign-chart")) {
-		Click
-		LogUsage("AttachmentSign()")
-		exit
-	    } else {
-	    	LogUsage("AttachmentSign()", "sign-chart image not found")
-		exit
-		}
-    } else {
-	LogUsage("AttachmentSign()", "Chart didn't activate")
-	exit
+    Sleep, 400
+    If (ImageMouseMove("sign-chart")) {
+        Click
     }
+    if (imageMouseMove("sign-chart-desktop")) {
+        Click
     }
 }
 
@@ -432,214 +305,49 @@ GoChartDesktop(){
             Sleep, 1000
         }
         IfWinActive, Chart Desktop
-	{
-	    LogUsage("GoChartDesktop()")
-    	    exit
-	    }
+            break
     } 
-    LogUsage("GoChartDesktop()","chart-desktop image not found")
 }
 
 
-LettertoCustomize(){
-	keywait, l
-	WinGetPos, xpos, ypos, winwidth, winheight,Chart
-	GUI -MinimizeBox -MaximizeBox
-	GUI, font, s18 Calibri
-	GUI, margin, 0, 0
-	GUI, add, Listbox, sort x10 y10 w380 h230 gSubmitDoubleClick vLetterName,Blank Letter to Patient|Imaging (Not MBI)|Letters||Results Lab Letter|MBI|Physical Therapy
-	GUI, font, s12 Calibri
-	GUI, Add, Button, x200 y250 w190 Default, Customize Letter
-	GUI, Add, Button, x10 y250 gButtonCancel , Cancel
-	gui, font, s9 Calibri
-	GUI, Add, Text, x10 y223,Hint: Type first letter then enter 
-	guilocationx := xpos + (winwidth//2) - 200
-	guilocationy := ypos + (winheight//2) - 145
-	GUI, show, x%guilocationx% y%guilocationy% w400 h290 ,Letter to Customize:
-}
-
-SubmitDoubleClick:
-if (A_GuiEvent = "Doubleclick"){
-GoSub, ButtonCustomizeLetter
-}
-return
-
-ButtonCancel:
-GUI, Destroy
-exit
-return
-
-GUIclose:
-GUI, Destroy
-exit
-return
-
-ButtonCustomizeLetter:
-GUI, Submit
-GUI, destroy
-if (LetterName = "Blank Letter to Patient"){
-	GoSub, OpenPrintNav
-	if (ErrorLevel = 0) {
-	    Sleep, 400
-	    Send l
-	    Sleep, 400
-	    Send {Down 2}
-	    Sleep, 400
-	    Send {Right 2}
-	    Sleep, 400
-	    Send l
-	    Sleep, 400
-	    Send {Down 2}
-	    Sleep, 400
-	    ControlClick, MLogicListBox1
-	    Sleep, 400
-	    Send B
-	    Sleep, 400
-	    Click, 392, 351
-	    LogUsage("Blank Letter to Patien")
-	}
-	exit
-} else if (lettername = "Imaging (Not MBI)") {
-	GoSub, OpenPrintNav
-	if (ErrorLevel = 0) {
-	    Sleep, 400
-	    Send l
-	    Sleep, 400
-	    Send {Down 2}
-	    Sleep, 400
-	    Send {Right 2}
-	    Sleep, 400
-	    Send i
-	    LogUsage("Imaging (Not MBI)")
-	}
-	exit
-} else if (lettername = "Results Lab Letter") {
-	GoSub, OpenPrintNav
-	if (ErrorLevel = 0) {
-	    Sleep, 400
-	    Send l
-	    Sleep, 400
-	    Send {Down 2}
-	    Sleep, 400
-	    Send {Right 2}
-	    Sleep, 400
-	    Send l
-	    Sleep, 400
-	    Send {Down 2}
-	    Sleep, 400
-	    ControlClick, MLogicListBox1
-	    Sleep, 400
-	    Send l
-	    Sleep, 400
-	    Click, 392, 351
-	    LogUsage("Results Lab Letter")
-	}
-	exit
-} else if (lettername = "MBI") {
-	GoSub, OpenPrintNav
-	if (ErrorLevel = 0) { 
-	    Sleep, 400
-	    Send l
-	    Sleep, 400
-	    Send {Down 2}
-	    Sleep, 400
-	    Send {Right 2}
-	    Sleep, 400
-	Send m
-	    Sleep, 400
-	Send {Down 4}
-	LogUsage("MBI")
-	}
-	exit
-} else if (lettername = "Letters") {
-	GoSub, OpenPrintNav
-	if (ErrorLevel = 0) {
-	    Sleep, 400
-	    Send l
-	    Sleep, 400
-	    Send {Down 2}
-	    Sleep, 400
-	    Send {Right 2}
-	    Sleep, 400
-	    Send l
-	    Sleep, 400
-	    Send {Down}
-	    ControlClick, MLogicListBox1
-	    Sleep, 400
-	    Send p
-	    Sleep, 400
-	    LogUsage("Letters")
-	}
-	exit
-} else if (lettername = "Physical Therapy") {
-	GoSub, OpenPrintNav
-	if (ErrorLevel = 0) {
-	    Sleep, 400
-	    Send l
-	    Sleep, 400
-	    Send {Down 2}
-	    Sleep, 400
-	    Send {Right 2}
-	    Sleep, 400
-	Send p
-	    Sleep, 400
-	Send {Down 5}
-
-	LogUsage("Physical Therapy")
-	}
-	exit
-} else {
-exit
-}
-return
-
-
-OpenPrintNav:
-WinActivate, Chart
-Sleep, 200
+ChartOpenLetter(){
+keywait, r
 Send ^p
 WinWaitActive, Print, , 5
+if (ErrorLevel = 0) {
+    Sleep, 400
+    Send l
+    Sleep, 400
+    Send {Down 2}
+    Sleep, 400
+    Send {Right 2}
+    Sleep, 400
+    Send l
+    Sleep, 400
+    Send {Down 2}
+    Click, 241, 59
+    Send B
+    Sleep, 400
+    Click, 392, 351
+}
 return
+}
 
 UpdateMeds(){
     Click, 350, 38
-    WinWaitActive, Update Medications, ,3
-    if (ErrorLevel = 0) {
-	LogUsage("UpdateMeds()")
-    } else {
-	LogUsage("UpdateMeds()", "Updates Meds didn't open")
-    }
 }
 
 ProblemSearch(){
     Click, 428, 38
     WinWaitActive, Update Problems, , 3
     if (ErrorLevel = 0) {
-        sleep, 250
+        sleep, 150
         Send !n
-	WinwaitActive, New Problem, ,5
-	if (Errorlevel = 0) {
-		LogUsage("ProblemSearch()")
-		exit
-	} else {
-		LogUsage("ProblemSearch()", "New Problem didn't open")
-		exit
-	}
-    } else {
-	LogUsage("ProblemSearch()", "Update Problems didn't open")
-	exit
     }
 }
 
 UpdateProblems(){
     Click, 428, 38
-    WinWaitActive, Update Problems, , 3
-    if (ErrorLevel = 0) {
-	LogUsage("UpdateProblems()")
-	exit
-    } else {
-	LogUsage("UpdateProblems()", "Update Problems didn't open")
-    }
 }
 
 BrowserPageDown(){
@@ -654,56 +362,26 @@ BrowserCloseandSign(){
     Sleep, 500
     If WinExist("Chart Desktop"){
         WinActivate, Chart Desktop
-	WinWaitActive, Chart Desktop, , 5
-	{
-        	sleep, 150
-        	If (ImageMouseMove("sign-chart-desktop")) {
-			Click
-			LogUsage("BrowserCloseandSign()")
-			exit
-        	} else {
-			LogUsage("BrowserCloseandSign()", "sign-chart-desktop image not found")
-			exit
-		}
-	}
-		LogUsage("BrowserCloseandSign()", "Chart Desktop didn't activate")
-		exit
+        sleep, 150
+        If (ImageMouseMove("sign-chart-desktop")) {
+            Click
+        }
     }
 }
 
 ChartDesktopSwap(){
     If WinExist("Update") { 
         WinActivate, Update
-	WinWaitActive, Update, ,5
-	if (Errorlevel = 0) {
-		LogUsage("ChartDesktopSwap()")
-		Exit
-	} else {
-		LogUsage("ChartDesktopSwap()","Update didn't activate")
-	}
     } else {
         If (ImageMouseMove("chart")) {
             Click
-	    LogUsage("ChartDesktopSwap()")
-	    exit
-        } else {
-		LogUsage("ChartDesktopSwap()", "chart image not found")
-		exit
-	}
+        }
     } 
 }
 
 ChartSwap(){
     If WinExist("Update") { 
         WinActivate, Update
-	WinWaitActive, Update, , 5
-	if (Errorlevel = 0) {
-		LogUsage("ChartSwap()")
-		exit
-	} else {
-		LogUsage("ChartSwap()", "Update didn't activate")
-		exit
-	}
     } else {
         GoChartDesktop()
     }
@@ -748,10 +426,7 @@ EndDouble(){
         WinWaitActive, End Update, , 5
         if (ErrorLevel = 0) {
             SendtoBuddy()
-        } else {
-		LogUsage("EndDouble()", "End Update didn't open")
-		exit
-	}
+        }
     } 
     else If WinActive("End Update") {
         SendtoBuddy()
@@ -759,50 +434,36 @@ EndDouble(){
 }
 
 SendtoBuddy(){
-    global Buddy
-    WinGetPos, xpos, ypos, winwidth, winheight, End Update
-    progressy := ypos + (winheight//2) -30
-    Progress, ZH0 B1 FM36 W%winwidth% H60 X%xpos% Y%progressy% WM700 CW98df8a,, %Buddy%, , Calibri
+    global 
+    Progress, ZH0 B1 FM48 WM700 CW98df8a,, %Buddy%, , Calibri
     Send !m
     Send !m
     Send !m
     Send !n
     WinWaitActive, New Routing Information, , 3
     if (ErrorLevel = 0) {
-	Sleep 200
-	Click 148, 86
-	Sleep 200
-	Click 182, 95
-	Sleep 200
+	Loop, 3
+	{
+		Click 148, 86
+		Sleep 50
+		Click 182, 95
+		Sleep 50
+	}
 	ControlFocus, Edit1
-	Sleep, 200
+	Sleep, 100
         Send %Buddy%
-        Sleep, 200
-        Send {Enter}
-	Sleep, 200
-	Click, 239, 329
+        Sleep, 100
+        ; Citrix loses window focus so use tab to go through controls. 
+        Send {Enter}{Tab 9}{Enter}
         WinWaitActive, End Update, , 3
-        if (ErrorLevel = 0) {
+        if (ErrorLevel =0) {
             Send !o
 	    Progress, Off
             WinWaitActive, Chart, , 15
             if (ErrorLevel = 0) {
-		LogUsage("SendtoBuddy()")
                 GoChartDesktop()
-            } else {
-		LogUsage("SendtoBuddy()", "Chart didn't activate")
-		Progress, Off
-		exit
-	    }
-        } else {
-		LogUsage("SendtoBuddy()", "End Update window didn't open")
-		Progress, Off
-		exit
-	}
-    } else {
-	Progress, Off
-	LogUsage("SendtoBuddy()", "New Routing Information didn't open")
-	exit
+            }
+        }
     }
     Progress, Off
 }
@@ -816,11 +477,7 @@ SignUpdateBackToDesktop(){
     Send !s
     WinWaitActive, Chart, , 15
     if (ErrorLevel = 0) {
-    	LogUsage("SignUpdateBackToDesktop()")
         GoChartDesktop()
-    } else {
-	LogUsage("SignUpdateBackToDesktop()", "Chart didn't activate")
-	exit
     }
 }
 
@@ -828,9 +485,6 @@ EndUpdate(){
     Send ^e
     ; Sometimes Fails, Try a few times?
     WinWaitActive, End Update, , 3
-    if (ErrorLevel = 0) {
-	LogUsage("EndUpdate()")
-    }
     if (ErrorLevel = 1) {
         Send ^e
         WinWaitActive, End Update, , 2
@@ -859,70 +513,36 @@ CreateCPOEAppend(){
                     Sleep, 1000
                     If (ImageMouseMove("CPOE-form")) {
                         Click, 2
-			LogUsage("CreateCPOEAppend()")
                         Exit
                     }
-		}
-
-		    LogUsage("CreateCPOEAppend()", "CPOE-form image not found")
-		    exit
-                } else {
-			LogUsage("CreateCPOEAppend()", "Update didn't activate")
-			exit
-		}
-            } else {
-		LogUsage("CreateCPOEAppend()", "Append document didn't activate")
-		exit
-	    }
-        } else {
-		LogUsage("CreateCPOEAppend()", "Append to didn't activate")
-		exit
-	}
+                }
+            }
+        }
     }
-
-GuiDefaultFont() { ; By SKAN www.autohotkey.com/forum/viewtopic.php?p=465438#465438
-hFont := DllCall( "GetStockObject", UInt,17 ) ; DEFAULT_GUI_FONT
-VarSetCapacity( LF, szLF := 60 * ( A_IsUnicode ? 2 : 1 ) )
-DllCall( "GetObject", UInt,hFont, Int,szLF, UInt,&LF )
-hDC := DllCall( "GetDC", UInt,hwnd ),
-DPI := DllCall( "GetDeviceCaps", UInt,hDC, Int,90 )
-DllCall( "ReleaseDC", Int,0, UInt,hDC ),
-S := Round( ( -NumGet( LF,0,"Int" )*72 ) / DPI )
-Return DllCall( "MulDiv",Int,&LF+28, Int,1,Int,1, Str )
-, DllCall( "SetLastError", UInt,S )
 }
-
 
 GoCPOEForm(){
     If (ImageMouseMove("CPOE-form")) {
         Click, 2
-	LogUsage("GoCPOEForm()")
-	exit
-    } else {
-	LogUsage("GoCPOEForm()", "CPOE-Form image not found")
-	exit
     }
 }
 
 ImageMouseMove(imagename){
+    CoordMode, Pixel, Screen
+    CoordMode, Mouse, Screen
     ImagePathandName := A_ScriptDir . "\files\" . imagename . ".PNG"
-    SysGet, VirtualWidth, 78
-    SysGet, VirtualHeight, 79
-    ImageSearch, FoundX, FoundY, -4000, -4000, %VirtualWidth%, %VirtualHeight%, *n20 %ImagePathandName%
+    ImageSearch, FoundX, FoundY, x1, y1, %A_ScreenWidth%, %A_ScreenHeight%, *n20 %ImagePathandName%
     if (ErrorLevel = 0) {
         MouseMove, %FoundX%, %FoundY%
+        CoordMode, Pixel, Window
+        CoordMode, Mouse, Window
         return 1
     }
+    CoordMode, Pixel, Window
+    CoordMode, Mouse, Window
     if (ErrorLevel >= 1) {
-        Sleep, 1000
-	ImageSearch, FoundX, FoundY, -4000, -4000, %VirtualWidth%, %VirtualHeight%, *n20 %ImagePathandName%
-	    if (ErrorLevel = 0) {
-		MouseMove, %FoundX%, %FoundY%
-		return 1
-	    } else {
-		return 0
-	    }
-	} 
+        return 0
+    }
 }
 
 ; Downloaded Functions #########################################

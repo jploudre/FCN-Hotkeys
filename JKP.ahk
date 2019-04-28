@@ -914,10 +914,24 @@ ImageMouseMove(imagename){
         return 1
     }
     if (ErrorLevel >= 1) {
-        return 0
-    }
+        Sleep, 1000
+	ImageSearch, FoundX, FoundY, -4000, -4000, %VirtualWidth%, %VirtualHeight%, *n20 %ImagePathandName%
+	    if (ErrorLevel = 0) {
+		MouseMove, %FoundX%, %FoundY%
+		return 1
+    		}
+	    if (ErrorLevel >= 1) {
+	        Sleep, 1000
+	        ImageSearch, FoundX, FoundY, -4000, -4000, %VirtualWidth%, %VirtualHeight%, *n20 %ImagePathandName%
+	        if (ErrorLevel = 0) {
+			MouseMove, %FoundX%, %FoundY%
+		return 1
+		} else {
+			return 0
+    	}
+} 
 }
-
+}
 ; Downloaded Functions #########################################
 ; http://www.autohotkey.com/board/topic/66855-patternhotkey-map-shortlong-keypress-patterns-to-anything/?hl=%2Bpatternhotkey
 PatternHotKey(arguments*)

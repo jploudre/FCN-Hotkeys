@@ -854,7 +854,7 @@ CreateCPOEAppend(){
             if (ErrorLevel = 0) {
                 Sleep, 1000
                 Send, {F8}
-                Loop, 3
+                Loop, 2
                 {    
                     Sleep, 1000
                     If (ImageMouseMove("CPOE-form")) {
@@ -914,15 +914,8 @@ ImageMouseMove(imagename){
         return 1
     }
     if (ErrorLevel >= 1) {
-        Sleep, 1000
-	ImageSearch, FoundX, FoundY, -4000, -4000, %VirtualWidth%, %VirtualHeight%, *n20 %ImagePathandName%
-	    if (ErrorLevel = 0) {
-		MouseMove, %FoundX%, %FoundY%
-		return 1
-	    } else {
-		return 0
-	    }
-	} 
+        return 0
+    }
 }
 
 ; Downloaded Functions #########################################
