@@ -104,7 +104,7 @@ return
     `::ChartSwap()
     c::ChartCPOEAppend()
     F5::ChartNewPhoneNote()
-    l::LettertoCustomize()
+    ~l::LettertoCustomize()
 #IfWinActive
 ; Hotkey Functions #########################################
 
@@ -443,6 +443,18 @@ GoChartDesktop(){
 
 LettertoCustomize(){
 	keywait, l
+	WinGetTitle, IsChartActive
+	if not (IsChartActive == "Chart"){
+		exit
+		}
+	ControlGetFocus, ActiveControl
+	if not Errorlevel {
+		IsEdit := substr(ActiveControl, 1, 4)
+		if (IsEdit = "edit") {
+			msgbox Edit field active
+			exit
+		}
+	}
 	WinGetPos, xpos, ypos, winwidth, winheight,Chart
 	GUI -MinimizeBox -MaximizeBox
 	GUI, font, s18 Calibri
