@@ -138,7 +138,7 @@ return
 #IfWinActive, Chart
     `::ChartSwap()
     ~c::ChartCPOEAppend()
-    F5::ChartNewPhoneNote()
+    F5::PatternHotKey(".->ChartNewPhoneNote()", "..->ChartNewPhoneCPOE()")
     ~l::LettertoCustomize()
 #IfWinActive
 ; Hotkey Functions #########################################
@@ -435,6 +435,25 @@ ChartNewPhoneNote(){
 			exit
 		} else {
 			LogUsage("ChartNewPhoneNote()","Update didn't activate")
+			exit
+			}
+	} else {
+		LogUsage("ChartNewPhoneNote()", "Didn't find green pixel color")
+		exit
+		}
+}
+
+ChartNewPhoneCPOE(){
+	PixelSearch, clickx, clicky, 107, 69, 113, 75, 0x32CD32
+	if not ErrorLevel { 
+		Click, %clickx%, %clicky%
+		WinWaitActive, Update, , 10
+		if (ErrorLevel = 0) {
+			Sleep, 600
+			LogUsage("ChartNewPhoneCPOE()")
+			GoCPOEForm()
+		} else {
+			LogUsage("ChartNewPhoneCPOE()","Update didn't activate")
 			exit
 			}
 	} else {

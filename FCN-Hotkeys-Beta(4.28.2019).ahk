@@ -7,22 +7,6 @@ return
     F2::UpdateMedSearch()
     ^Space::Click, 558, 543
 
-RButton::
-MouseGetPos, xpos, ypos
-if ( 21 < xpos AND xpos < 790 AND 73 < ypos AND ypos < 247) {
-    Click %xpos%, %ypos%
-    Sleep, 150
-    Send !r
-    WinWaitActive, Remove Medication,,3
-    if (ErrorLevel=0) {
-	Sleep, 150
-	Send {Enter}
-	LogUsage("Right Click Remove Medication")
-    } 
-} else {
-	Click    
-}
-return
 
 #IfWinActive, New Medication
     ^Space::Click, 686, 659
@@ -32,25 +16,6 @@ return
     F3::Send !n
     ^Space::Click, 890, 580
 
-	RButton::
-	MouseGetPos, xpos, ypos
-	; Problems
-	if ( 21 < xpos AND xpos < 995 AND 82 < ypos AND ypos < 229) {
-	    Click %xpos%, %ypos%
-	    Sleep, 150
-	    Send !r
-		WinWaitActive, Remove Problem,,3
-		if (ErrorLevel = 0) {
-			Sleep, 100
-			Send {Enter}
-			LogUsage("Right Click Remove Problem")
-	    	} else {
-			LogUsage("Right Click Remove Problem", "Remove Problem Window didn't open") 
-		}
-	}else {
-	    	Click    
-	}
-	return
 
 #IfWinActive, Edit Problem
     ^Space::Click, 419, 538
@@ -137,7 +102,7 @@ return
 
 #IfWinActive, Chart
     `::ChartSwap()
-    ~c::ChartCPOEAppend()
+    c::ChartCPOEAppend()
     F5::ChartNewPhoneNote()
     ~l::LettertoCustomize()
 #IfWinActive
@@ -163,9 +128,7 @@ Setup(){
     SplashImage, %SetWorkingDir%\files\FCN-macros.png,B2 FS18 C0, 
     Sleep, 700
     SplashImage, Off
-    
-    OnClipboardChange("ClipChanged")
-    
+
     telemetry_folder := "\\fcnjboss01\AHK_Telemetry$\" 
     telemetry_prefs := telemetry_folder . A_UserName . "-Preferences.ini"
     telemetry_log := telemetry_folder . A_UserName . "-Usage.csv"
@@ -206,33 +169,6 @@ Setup(){
     Return
 }
 
-ClipChanged(){
-	StringLeft, IsRecall, Clipboard, 11
-	if (IsRecall = "wcc-recall:"){
-		patient_name := SubStr(Clipboard,12)
-		if (WinExist("Chart") or WinExist("Chart Desktop")){
-			WinActivate
-			Sleep, 1000
-			Send ^f
-			WinWaitActive, Find Patient, , 5
-			if not ErrorLevel {
-				Send !b
-				Sleep 50
-				Send n
-				Sleep 50
-				send !f
-				Sleep 50
-				Send %patient_name%{Enter}
-				LogUsage("ClipChanged Open Patient")
-			} else {
-				LogUsage("ClipChanged Open Patient","Find Patient Didn't Open")
-			}
-
-	} else {
-		exit
-	}
-}
-}
 
 EditBuddy:
 global Buddy, telemetry_prefs
@@ -515,7 +451,6 @@ LettertoCustomize(){
 	if not Errorlevel {
 		IsEdit := substr(ActiveControl, 1, 4)
 		if (IsEdit = "edit") {
-			msgbox Edit field active
 			exit
 		}
 	}
@@ -798,13 +733,9 @@ ChartDesktopCPOEAppend(){
 }
 
 ChartCPOEAppend(){
-        Keywait, c
-	WinGetTitle, IsChartActive
-	if not (IsChartActive == "Chart"){
-		exit
-	}
     SwitchDocumentFocus()
     If (ImageMouseMove("append-chart")) {
+        Keywait, c
         Click
         CreateCPOEAppend()
         exit
