@@ -160,7 +160,7 @@ Setup(){
     Menu, Tray, Icon, %SetWorkingDir%\files\favicon.ico
     Menu, Tray, Default, Edit Buddy
 
-    SplashImage, %SetWorkingDir%\files\FCN-macros.png,B2 FS18 C0, 
+    SplashImage, %SetWorkingDir%\files\welcome-splashscreen.png,B2 FS18 C0, 
     Sleep, 700
     SplashImage, Off
     
@@ -378,13 +378,13 @@ LetterPrintAndSign(){
 AttachmentCPOEAppend(){
     Keywait, c
     Send !{F4}
-    Sleep, 400
+    Sleep, 600
     IfWinExist, Chart Desktop
 	{
         WinActivate, Chart Desktop
 	WinWaitActive, Chart Desktop, ,5
 	if (ErrorLevel = 0 ) {
-		Sleep 400
+		Sleep 600
 	    If (ImageMouseMove("append")) {
 		Click
 		LogUsage("AttachmentCPOEAppend()")
@@ -403,7 +403,7 @@ AttachmentCPOEAppend(){
         WinActivate, Chart
     	WinWaitActive, Chart, , 5
 	if (Errorlevel = 0) {
-	    Sleep, 400
+	    Sleep, 600
 	    if (imageMouseMove("append-chart")) {
 		Click
 		LogUsage("AttachmentCPOEAppend()")
@@ -464,7 +464,7 @@ ChartNewPhoneCPOE(){
 
 AttachmentSign(){
     Send !{F4}
-    Sleep, 400
+    Sleep, 600
     IfWinExist, Chart Desktop
     {
 	WinActivate, Chart Desktop
@@ -542,7 +542,7 @@ LettertoCustomize(){
 	GUI -MinimizeBox -MaximizeBox
 	GUI, font, s18 Calibri
 	GUI, margin, 0, 0
-	GUI, add, Listbox, sort x10 y10 w380 h230 gSubmitDoubleClick vLetterName,Blank Letter to Patient|Imaging (Not MBI)|Letters||Results Lab Letter|MBI|Physical Therapy
+	GUI, add, Listbox, sort x10 y10 w380 h230 gSubmitDoubleClick vLetterName,Blank Letter to Patient|Imaging (Not MBI)|Letters||MBI|MTC|Physical Therapy|Results Lab Letter|
 	GUI, font, s12 Calibri
 	GUI, Add, Button, x200 y250 w190 Default, Customize Letter
 	GUI, Add, Button, x10 y250 gButtonCancel , Cancel
@@ -563,7 +563,6 @@ ButtonCancel:
 GUI, Destroy
 exit
 return
-
 GUIclose:
 GUI, Destroy
 exit
@@ -575,21 +574,21 @@ GUI, destroy
 if (LetterName = "Blank Letter to Patient"){
 	GoSub, OpenPrintNav
 	if (ErrorLevel = 0) {
-	    Sleep, 400
+	    Sleep, 600
 	    Send l
-	    Sleep, 400
+	    Sleep, 600
 	    Send {Down 2}
-	    Sleep, 400
+	    Sleep, 600
 	    Send {Right 2}
-	    Sleep, 400
+	    Sleep, 600
 	    Send l
-	    Sleep, 400
+	    Sleep, 600
 	    Send {Down 2}
-	    Sleep, 400
+	    Sleep, 600
 	    ControlClick, MLogicListBox1
-	    Sleep, 400
+	    Sleep, 600
 	    Send B
-	    Sleep, 400
+	    Sleep, 600
 	    Click, 392, 351
 	    LogUsage("Blank Letter to Patien")
 	}
@@ -597,13 +596,13 @@ if (LetterName = "Blank Letter to Patient"){
 } else if (lettername = "Imaging (Not MBI)") {
 	GoSub, OpenPrintNav
 	if (ErrorLevel = 0) {
-	    Sleep, 400
+	    Sleep, 600
 	    Send l
-	    Sleep, 400
+	    Sleep, 600
 	    Send {Down 2}
-	    Sleep, 400
+	    Sleep, 600
 	    Send {Right 2}
-	    Sleep, 400
+	    Sleep, 600
 	    Send i
 	    LogUsage("Imaging (Not MBI)")
 	}
@@ -611,21 +610,21 @@ if (LetterName = "Blank Letter to Patient"){
 } else if (lettername = "Results Lab Letter") {
 	GoSub, OpenPrintNav
 	if (ErrorLevel = 0) {
-	    Sleep, 400
+	    Sleep, 600
 	    Send l
-	    Sleep, 400
+	    Sleep, 600
 	    Send {Down 2}
-	    Sleep, 400
+	    Sleep, 600
 	    Send {Right 2}
-	    Sleep, 400
+	    Sleep, 600
 	    Send l
-	    Sleep, 400
+	    Sleep, 600
 	    Send {Down 2}
-	    Sleep, 400
+	    Sleep, 600
 	    ControlClick, MLogicListBox1
-	    Sleep, 400
+	    Sleep, 600
 	    Send l
-	    Sleep, 400
+	    Sleep, 600
 	    Click, 392, 351
 	    LogUsage("Results Lab Letter")
 	}
@@ -633,51 +632,67 @@ if (LetterName = "Blank Letter to Patient"){
 } else if (lettername = "MBI") {
 	GoSub, OpenPrintNav
 	if (ErrorLevel = 0) { 
-	    Sleep, 400
+	    Sleep, 600
 	    Send l
-	    Sleep, 400
+	    Sleep, 600
 	    Send {Down 2}
-	    Sleep, 400
+	    Sleep, 600
 	    Send {Right 2}
-	    Sleep, 400
+	    Sleep, 600
 	Send m
-	    Sleep, 400
+	    Sleep, 600
 	Send {Down 4}
 	LogUsage("MBI")
+	}
+	exit
+} else if (lettername = "MTC") {
+	GoSub, OpenPrintNav
+	if (ErrorLevel = 0) { 
+	    Sleep, 600
+	    Send l
+	    Sleep, 600
+	    Send {Down 2}
+	    Sleep, 600
+	    Send {Right 2}
+	    Sleep, 600
+	Send m
+	    Sleep, 600
+	Send {Down 1}
+	LogUsage("MTC")
 	}
 	exit
 } else if (lettername = "Letters") {
 	GoSub, OpenPrintNav
 	if (ErrorLevel = 0) {
-	    Sleep, 400
+	    Sleep, 600
 	    Send l
-	    Sleep, 400
+	    Sleep, 600
 	    Send {Down 2}
-	    Sleep, 400
+	    Sleep, 600
 	    Send {Right 2}
-	    Sleep, 400
+	    Sleep, 600
 	    Send l
-	    Sleep, 400
+	    Sleep, 600
 	    Send {Down}
 	    ControlClick, MLogicListBox1
-	    Sleep, 400
+	    Sleep, 600
 	    Send p
-	    Sleep, 400
+	    Sleep, 600
 	    LogUsage("Letters")
 	}
 	exit
 } else if (lettername = "Physical Therapy") {
 	GoSub, OpenPrintNav
 	if (ErrorLevel = 0) {
-	    Sleep, 400
+	    Sleep, 600
 	    Send l
-	    Sleep, 400
+	    Sleep, 600
 	    Send {Down 2}
-	    Sleep, 400
+	    Sleep, 600
 	    Send {Right 2}
-	    Sleep, 400
+	    Sleep, 600
 	Send p
-	    Sleep, 400
+	    Sleep, 600
 	Send {Down 5}
 
 	LogUsage("Physical Therapy")
@@ -1036,7 +1051,7 @@ ImageMouseMove(imagename){
 	Send `;pmh{Space}
 	Sleep 1000
 	Click, 899, 118
-	Sleep, 400
+	Sleep, 600
 	Click, 675, 588
 return
 
