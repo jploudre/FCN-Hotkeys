@@ -165,9 +165,9 @@ Setup(){
     SplashImage, Off
     
     
-    telemetry_folder := %A_ScriptDir%
-    telemetry_prefs := telemetry_folder . A_UserName . "-Preferences.ini"
-    telemetry_log := telemetry_folder . A_UserName . "-Usage.csv"
+    telemetry_folder := A_ScriptDir
+    telemetry_prefs := telemetry_folder . "\" . A_UserName . "-Preferences.ini"
+    telemetry_log := telemetry_folder . "\" . A_UserName . "-Usage.csv"
     enable_logging := False
 
     IfNotExist, %telemetry_prefs%
@@ -175,14 +175,12 @@ Setup(){
         InputBox, BuddyName, Who's your Buddy?,
         (
     
-        Who do you 'hold' things to most frequently
-        in Centricity?
-    
-        Typically this might be your CAs last name...
+        Who do you 'hold' things to most frequently in Centricity?
+ 
         ), , 300, , , , , , 
         if (Errorlevel= 0) {
 		IniWrite, %BuddyName%, %telemetry_prefs%, Preferences, Buddy
-		SplashImage, %SetWorkingDir%\files\edit-buddy-help.png, B2 ZH200 ZW-1 FM24 FS18 C0, Later look for the FCN Logo to change your buddy., Thanks!
+		SplashImage, %A_ScriptDir%\files\edit-buddy-help.png, B2 ZH200 ZW-1 FM24 FS18 C0, Later look for the FCN Logo to change your buddy., Thanks!
 		Sleep 8000
 		SplashImage, Off
     	}
@@ -205,8 +203,7 @@ IniRead, Buddy, %telemetry_prefs%, Preferences, Buddy
 InputBox, BuddyName, Who's your Buddy?,
     (
 
-    Who do you 'hold' things to most frequently
-    in Centricity?
+    Who do you 'hold' things to most frequently in Centricity?
 
     Typically this might be your CAs last name...
     ), , 300, , , , , , %Buddy%
