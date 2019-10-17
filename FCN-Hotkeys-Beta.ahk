@@ -157,15 +157,15 @@ Setup(){
     Menu, Tray, Add, Edit Buddy, EditBuddy
     Menu, Tray, Add, Reload, ReloadScript
     Menu, Tray, Add, Exit, ExitScript
-    Menu, Tray, Icon, %SetWorkingDir%\files\favicon.ico
+    Menu, Tray, Icon, %A_ScriptDir%\files\favicon.ico
     Menu, Tray, Default, Edit Buddy
 
-    SplashImage, %SetWorkingDir%\files\welcome-splashscreen.png,B2 FS18 C0, 
+    SplashImage, %A_ScriptDir%\files\welcome-splashscreen.png,B2 FS18 C0, 
     Sleep, 700
     SplashImage, Off
     
     
-    telemetry_folder := %SetWorkingDir%
+    telemetry_folder := %A_ScriptDir%
     telemetry_prefs := telemetry_folder . A_UserName . "-Preferences.ini"
     telemetry_log := telemetry_folder . A_UserName . "-Usage.csv"
     enable_logging := False
