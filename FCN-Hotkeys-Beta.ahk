@@ -165,7 +165,7 @@ Setup(){
     SplashImage, Off
     
     
-    telemetry_folder := %A_ScriptDir%
+    telemetry_folder := A_ScriptDir
     telemetry_prefs := telemetry_folder . A_UserName . "-Preferences.ini"
     telemetry_log := telemetry_folder . A_UserName . "-Usage.csv"
     enable_logging := False
