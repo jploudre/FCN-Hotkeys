@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Welcome to Macros for CPS’s documentation! &mdash; Macros for CPS  documentation</title>
+  <title>Getting Started &mdash; Macros for CPS  documentation</title>
   
 
   
@@ -78,9 +78,11 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../GettingStarted.html">Getting Started</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="../GettingStarted.html#installation-on-server-for-citrix">Installation on Server (for Citrix)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../GettingStarted.html#installation-on-server">Installation on Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../GettingStarted.html#local-installation">Local Installation</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../GettingStarted.html#first-use">First Use</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Walkthrough.html">Walkthrough</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Reference.html">Reference</a></li>
 </ul>
@@ -128,13 +130,13 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>Welcome to Macros for CPS’s documentation!</li>
+      <li>Getting Started</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/GettingStarted.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -147,25 +149,37 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <p>.. Macros for CPS documentation master file, created by
-sphinx-quickstart on Sat Sep 21 10:50:05 2019.
-You can adapt this file completely to your liking, but it should at least
-contain the root <code class="docutils literal notranslate"><span class="pre">toctree</span></code> directive.</p>
-<div class="section" id="welcome-to-macros-for-cps-s-documentation">
-<h1>Welcome to Macros for CPS’s documentation!<a class="headerlink" href="#welcome-to-macros-for-cps-s-documentation" title="Permalink to this headline">¶</a></h1>
-<p>.. toctree::
-:maxdepth: 2
-:caption: Contents:</p>
-<p>GettingStarted
-Walkthrough
-Reference</p>
-</div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<p>These CPS macros are made with <code class="docutils literal notranslate"><span class="pre">AutoHotKey</span> <span class="pre">&lt;https://www.autohotkey.com/&gt;</span></code> – an open source Windows macro utility that’s over 15 years old. Our macros we built to automate small/frequent pain points for CPS users. Some of the macros have been in production use for 5 years. The CPS macros were more systematically developed for FCN in 2019 using CPS 12.2. Brief testing with 12.3 shows that they work with that version, too. There were dozens of other macros over time. The current macros are the highlights because they are more generally useful for us and relatively easy for users to learn.</p>
+<p>These are provided as is – if something changes in CPS versions, it could make a step in a macro not work. At FCN, we run CPS on Windows Server and client software is accessed through Citrix. If a macro isn’t working on your CPS, you can try fixing it by looking at the source code. The main code file is ‘FCN-Macros-Beta.ahk’.</p>
+<p>These macros can be installed two ways:</p>
 <ul class="simple">
-<li><p>:ref:<code class="docutils literal notranslate"><span class="pre">genindex</span></code></p></li>
-<li><p>:ref:<code class="docutils literal notranslate"><span class="pre">search</span></code></p></li>
+<li><p>On the server for CPS (for when using Citrix like at FCN). In this approach you’d create a custom command for your users to click that would open the ‘FCN-Macros-Beta.exe’</p></li>
+<li><p>or locally on a Windows computer.</p></li>
 </ul>
+<p>It’s most reliable if the Macros live in the same computer as the CPS client software. You could install it locally on a Windows computer and access through Citrix. Say, to test it out. But that changes the speed and accuracy of certain steps for macros and decreases reliability. For example, imagine you download this to your laptop and start the macros there. If you log into Citrix to open CPS, it might not work a reliably.</p>
+<div class="section" id="installation-on-server">
+<h2>Installation on Server<a class="headerlink" href="#installation-on-server" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Put files on a jboss server or something like that.</p></li>
+<li><p>Create a quicktext to launch (if you’d like to keep it hidden from CPS users until you’ve tested it out.) We use this to as a quicktext named .alphatest to launch our test version. Note the escaped backslashes and adjust for your setup.
+{runshellopen(“\\fcnjboss01.fcn.net\ahk$\alpha-test.exe”)}::</p></li>
+<li><p>Create a Custom Command on the Toolbar for users to launch</p></li>
+<li><p>The script saves a preference of a ‘buddy’ – it will be in the same folder as the script by default. At FCN we use a separate folder on the server. This can be set in the ‘setup() function’.</p></li>
+</ul>
+</div>
+<div class="section" id="local-installation">
+<h2>Local Installation<a class="headerlink" href="#local-installation" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Download files and double click on FCN-Hotkeys-Beta.exe</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="first-use">
+<h1>First Use<a class="headerlink" href="#first-use" title="Permalink to this headline">¶</a></h1>
+<p>We have some logging that we use at FCN so we can troubleshoot. It’s disabled by default other than creating the files that are used.</p>
+<p>The first time through, a user needs to set their ‘buddy’ – the person or desktop that they hold updates to the most.</p>
 </div>
 
 

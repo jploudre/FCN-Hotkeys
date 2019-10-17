@@ -10,9 +10,9 @@ Welcome to Macros for CPS's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   Getting Started
-   Walkthrough of macros
-   Full Reference
+   GettingStarted
+   Walkthrough
+   Reference
 
 
 Indices and tables

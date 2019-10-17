@@ -164,22 +164,14 @@ Setup(){
     Sleep, 700
     SplashImage, Off
     
-    OnClipboardChange("ClipChanged")
     
-    telemetry_folder := "\\fcnjboss01\AHK_Telemetry$\" 
+    telemetry_folder := %SetWorkingDir%
     telemetry_prefs := telemetry_folder . A_UserName . "-Preferences.ini"
     telemetry_log := telemetry_folder . A_UserName . "-Usage.csv"
-    enable_logging := True
+    enable_logging := False
 
     IfNotExist, %telemetry_prefs%
     {
-	IfExist, Z:\FCN-Macro-Settings.ini
-	{
-		IniRead, Buddy, Z:\FCN-Macro-Settings.ini, Preferences, Buddy
-		IniWrite, %Buddy%, %telemetry_prefs%, Preferences, Buddy
-	}
-	IfNotExist, Z:\FCN-Macro-Settings.ini
-        {
         InputBox, BuddyName, Who's your Buddy?,
         (
     
@@ -194,7 +186,6 @@ Setup(){
 		Sleep 8000
 		SplashImage, Off
     	}
-        }
     } else {
 	IniRead, Buddy, %telemetry_prefs%, Preferences, Buddy
     }
@@ -206,33 +197,6 @@ Setup(){
     Return
 }
 
-ClipChanged(){
-	StringLeft, IsRecall, Clipboard, 11
-	if (IsRecall = "wcc-recall:"){
-		patient_name := SubStr(Clipboard,12)
-		if (WinExist("Chart") or WinExist("Chart Desktop")){
-			WinActivate
-			Sleep, 1000
-			Send ^f
-			WinWaitActive, Find Patient, , 5
-			if not ErrorLevel {
-				Send !b
-				Sleep 50
-				Send n
-				Sleep 50
-				send !f
-				Sleep 50
-				Send %patient_name%{Enter}
-				LogUsage("ClipChanged Open Patient")
-			} else {
-				LogUsage("ClipChanged Open Patient","Find Patient Didn't Open")
-			}
-
-	} else {
-		exit
-	}
-}
-}
 
 EditBuddy:
 global Buddy, telemetry_prefs
@@ -283,6 +247,7 @@ SwitchDocumentFocus(){
     }
 }
 
+
 OrderSearch(){
     Click, 254, 38
     WinWaitActive, Update Orders, , 3
@@ -299,6 +264,7 @@ OrderSearch(){
     }
 }
 
+
 MedSearch(){
     Click, 350, 38
     WinWaitActive, Update Medications, , 3
@@ -310,6 +276,7 @@ MedSearch(){
 	exit
 	}
 }
+
 
 UpdateMedSearch(){
     sleep, 150
@@ -331,6 +298,7 @@ UpdateMedSearch(){
 	exit
     }
 }
+
 
 LetterPrintAndSign(){
     Send !p
@@ -374,6 +342,7 @@ LetterPrintAndSign(){
         exit
     }
 }
+
 
 AttachmentCPOEAppend(){
     Keywait, c
@@ -419,6 +388,7 @@ AttachmentCPOEAppend(){
     }
 }
 
+
 ChartNewPhoneNote(){
 	PixelSearch, clickx, clicky, 107, 69, 113, 75, 0x32CD32
 	if not ErrorLevel { 
@@ -443,6 +413,7 @@ ChartNewPhoneNote(){
 		}
 }
 
+
 ChartNewPhoneCPOE(){
 	PixelSearch, clickx, clicky, 107, 69, 113, 75, 0x32CD32
 	if not ErrorLevel { 
@@ -461,6 +432,7 @@ ChartNewPhoneCPOE(){
 		exit
 		}
 }
+
 
 AttachmentSign(){
     Send !{F4}
@@ -505,6 +477,7 @@ AttachmentSign(){
     }
     }
 }
+
 
 GoChartDesktop(){
     sleep, 500
@@ -553,11 +526,13 @@ LettertoCustomize(){
 	GUI, show, x%guilocationx% y%guilocationy% w400 h290 ,Letter to Customize:
 }
 
+
 SubmitDoubleClick:
 if (A_GuiEvent = "Doubleclick"){
 GoSub, ButtonCustomizeLetter
 }
 return
+
 
 ButtonCancel:
 GUI, Destroy
@@ -567,6 +542,7 @@ GUIclose:
 GUI, Destroy
 exit
 return
+
 
 ButtonCustomizeLetter:
 GUI, Submit
@@ -711,6 +687,7 @@ Send ^p
 WinWaitActive, Print, , 5
 return
 
+
 UpdateMeds(){
     Click, 350, 38
     WinWaitActive, Update Medications, ,3
@@ -720,6 +697,7 @@ UpdateMeds(){
 	LogUsage("UpdateMeds()", "Updates Meds didn't open")
     }
 }
+
 
 ProblemSearch(){
     Click, 428, 38
@@ -741,6 +719,7 @@ ProblemSearch(){
     }
 }
 
+
 UpdateProblems(){
     Click, 428, 38
     WinWaitActive, Update Problems, , 3
@@ -752,12 +731,14 @@ UpdateProblems(){
     }
 }
 
+
 BrowserPageDown(){
     WinGetPos , , , WinWidth, WinHeight, A
     xclick := WinWidth - 18
     yclick := WinHeight -30
     Click, %xclick%, %yclick%
 }
+
 
 BrowserCloseandSign(){
     Send !{F4}
@@ -781,6 +762,7 @@ BrowserCloseandSign(){
     }
 }
 
+
 ChartDesktopSwap(){
     If WinExist("Update") { 
         WinActivate, Update
@@ -803,6 +785,7 @@ ChartDesktopSwap(){
     } 
 }
 
+
 ChartSwap(){
     If WinExist("Update") { 
         WinActivate, Update
@@ -819,6 +802,7 @@ ChartSwap(){
     }
 }
 
+
 ChartDesktopCPOEAppend(){
     SwitchDocumentFocus()
     If (ImageMouseMove("append")) {
@@ -830,6 +814,7 @@ ChartDesktopCPOEAppend(){
         send c
     }
 }
+
 
 ChartCPOEAppend(){
         Keywait, c
@@ -847,6 +832,7 @@ ChartCPOEAppend(){
     }
 }
 
+
 End(){
     If WinActive("End Update") {
         Send !o
@@ -855,6 +841,7 @@ End(){
         EndUpdate()
     }
 }
+
 
 EndDouble(){
     If WinActive("Update") {
@@ -871,6 +858,7 @@ EndDouble(){
         SendtoBuddy()
     }   
 }
+
 
 SendtoBuddy(){
     global Buddy
@@ -938,6 +926,7 @@ SignUpdateBackToDesktop(){
     }
 }
 
+
 EndUpdate(){
     Send ^e
     ; Sometimes Fails, Try a few times?
@@ -954,6 +943,7 @@ EndUpdate(){
     }
     sleep, 300
 }
+
 
 CreateCPOEAppend(){
     WinWaitActive, Append to, , 3
@@ -994,18 +984,6 @@ CreateCPOEAppend(){
 	}
     }
 
-GuiDefaultFont() { ; By SKAN www.autohotkey.com/forum/viewtopic.php?p=465438#465438
-hFont := DllCall( "GetStockObject", UInt,17 ) ; DEFAULT_GUI_FONT
-VarSetCapacity( LF, szLF := 60 * ( A_IsUnicode ? 2 : 1 ) )
-DllCall( "GetObject", UInt,hFont, Int,szLF, UInt,&LF )
-hDC := DllCall( "GetDC", UInt,hwnd ),
-DPI := DllCall( "GetDeviceCaps", UInt,hDC, Int,90 )
-DllCall( "ReleaseDC", Int,0, UInt,hDC ),
-S := Round( ( -NumGet( LF,0,"Int" )*72 ) / DPI )
-Return DllCall( "MulDiv",Int,&LF+28, Int,1,Int,1, Str )
-, DllCall( "SetLastError", UInt,S )
-}
-
 
 GoCPOEForm(){
     If (ImageMouseMove("CPOE-form")) {
@@ -1017,6 +995,7 @@ GoCPOEForm(){
 	exit
     }
 }
+
 
 ImageMouseMove(imagename){
     ImagePathandName := A_ScriptDir . "\files\" . imagename . ".PNG"
@@ -1047,13 +1026,6 @@ ImageMouseMove(imagename){
 }
 }
 
-::pmhj::
-	Send `;pmh{Space}
-	Sleep 1000
-	Click, 899, 118
-	Sleep, 600
-	Click, 675, 588
-return
 
 ; Downloaded Functions #########################################
 ; http://www.autohotkey.com/board/topic/66855-patternhotkey-map-shortlong-keypress-patterns-to-anything/?hl=%2Bpatternhotkey

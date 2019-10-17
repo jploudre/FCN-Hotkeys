@@ -1,0 +1,252 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Getting Started &mdash; Macros for CPS  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script type="text/javascript" src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Walkthrough" href="Walkthrough.html" />
+    <link rel="prev" title="Welcome to Macros for CPS’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> Macros for CPS
+          
+
+          
+          </a>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#installation-on-server">Installation on Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#local-installation">Local Installation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#first-use">First Use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Walkthrough.html">Walkthrough</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Reference.html">Reference</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Macros for CPS</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Getting Started</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/GettingStarted.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="getting-started">
+<h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
+<p>These CPS macros are made with <cite>AutoHotKey &lt;https://www.autohotkey.com/&gt;</cite> – an open source Windows macro utility that’s over 15 years old. Our macros we built to automate small/frequent pain points for CPS users. Some of the macros have been in production use for 5 years. The CPS macros were more systematically developed for FCN in 2019 using CPS 12.2. Brief testing with 12.3 shows that they work with that version, too. There were dozens of other macros over time. The current macros are the highlights because they are more generally useful for us and relatively easy for users to learn.</p>
+<p>These are provided as is – if something changes in CPS versions, it could make a step in a macro not work. At FCN, we run CPS on Windows Server and client software is accessed through Citrix. If a macro isn’t working on your CPS, you can try fixing it by looking at the source code. The main code file is ‘FCN-Macros-Beta.ahk’.</p>
+<p>These macros can be installed two ways:</p>
+<ul class="simple">
+<li><p>On the server for CPS (for when using Citrix like at FCN). In this approach you’d create a custom command for your users to click that would open the ‘FCN-Macros-Beta.exe’</p></li>
+<li><p>or locally on a Windows computer.</p></li>
+</ul>
+<p>It’s most reliable if the Macros live in the same computer as the CPS client software. You could install it locally on a Windows computer and access through Citrix. Say, to test it out. But that changes the speed and accuracy of certain steps for macros and decreases reliability. For example, imagine you download this to your laptop and start the macros there. If you log into Citrix to open CPS, it might not work a reliably.</p>
+<div class="section" id="installation-on-server">
+<h2>Installation on Server<a class="headerlink" href="#installation-on-server" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Put files on a jboss server or something like that.</p></li>
+<li><p>Create a quicktext to launch (if you’d like to keep it hidden from CPS users until you’ve tested it out.) We use this to as a quicktext named .alphatest to launch our test version. Note the escaped backslashes and adjust for your setup.</p></li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">runshellopen</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\\\</span><span class="s2">fcnjboss01.fcn.net</span><span class="se">\\</span><span class="s2">ahk$</span><span class="se">\\</span><span class="s2">alpha-test.exe&quot;</span><span class="p">)}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>Create a Custom Command on the Toolbar for users to launch</p></li>
+<li><p>The script saves a preference of a ‘buddy’ – it will be in the same folder as the script by default. At FCN we use a separate folder on the server. This can be set in the ‘setup() function’.</p></li>
+</ul>
+</div>
+<div class="section" id="local-installation">
+<h2>Local Installation<a class="headerlink" href="#local-installation" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Download files and double click on FCN-Hotkeys-Beta.exe</p></li>
+</ul>
+</div>
+</div>
+<div class="section" id="first-use">
+<h1>First Use<a class="headerlink" href="#first-use" title="Permalink to this headline">¶</a></h1>
+<p>We have some logging that we use at FCN so we can troubleshoot. It’s disabled by default other than creating the files that are used.</p>
+<p>The first time through, a user needs to set their ‘buddy’ – the person or desktop that they hold updates to the most.</p>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="Walkthrough.html" class="btn btn-neutral float-right" title="Walkthrough" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to Macros for CPS’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2019, Jonathan Ploudre
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+    <!-- Theme Analytics -->
+    <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+    ga('create', 'UA-29863015-2', 'auto');
+    ga('send', 'pageview');
+    </script>
+
+    
+   
+
+</body>
+</html>

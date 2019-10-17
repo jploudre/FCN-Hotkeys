@@ -1,0 +1,41 @@
+Getting Started
+==================================
+
+These CPS macros are made with `AutoHotKey <https://www.autohotkey.com/>` -- an open source Windows macro utility that's over 15 years old. Our macros we built to automate small/frequent pain points for CPS users. Some of the macros have been in production use for 5 years. The CPS macros were more systematically developed for FCN in 2019 using CPS 12.2. Brief testing with 12.3 shows that they work with that version, too. There were dozens of other macros over time. The current macros are the highlights because they are more generally useful for us and relatively easy for users to learn.
+
+These are provided as is -- if something changes in CPS versions, it could make a step in a macro not work. At FCN, we run CPS on Windows Server and client software is accessed through Citrix. If a macro isn't working on your CPS, you can try fixing it by looking at the source code. The main code file is 'FCN-Macros-Beta.ahk'.
+
+
+These macros can be installed two ways: 
+
+* On the server for CPS (for when using Citrix like at FCN). In this approach you'd create a custom command for your users to click that would open the 'FCN-Macros-Beta.exe' 
+* or locally on a Windows computer. 
+
+It's most reliable if the Macros live in the same computer as the CPS client software. You could install it locally on a Windows computer and access through Citrix. Say, to test it out. But that changes the speed and accuracy of certain steps for macros and decreases reliability. For example, imagine you download this to your laptop and start the macros there. If you log into Citrix to open CPS, it might not work a reliably. 
+
+Installation on Server
+-------------------------------------------------
+
+* Put files on a jboss server or something like that.
+* Create a quicktext to launch (if you'd like to keep it hidden from CPS users until you've tested it out.) We use this to as a quicktext named .alphatest to launch our test version. Note the escaped backslashes and adjust for your setup.
+::
+
+	{runshellopen("\\\\fcnjboss01.fcn.net\\ahk$\\alpha-test.exe")}
+
+* Create a Custom Command on the Toolbar for users to launch
+* The script saves a preference of a 'buddy' -- it will be in the same folder as the script by default. At FCN we use a separate folder on the server. This can be set in the 'setup() function'.
+
+Local Installation 
+---------------------------------------------------
+
+* Download files and double click on FCN-Hotkeys-Beta.exe
+
+First Use
+===================================================
+
+We have some logging that we use at FCN so we can troubleshoot. It's disabled by default other than creating the files that are used. 
+
+The first time through, a user needs to set their 'buddy' -- the person or desktop that they hold updates to the most.
+
+
+
