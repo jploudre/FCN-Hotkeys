@@ -80,11 +80,11 @@
               <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Getting Started</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#installation-on-server">Installation on Server</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#local-installation">Local Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation-on-server">Installation on Server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#making-it-your-own">Making it your own</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="#first-use">First Use</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Walkthrough.html">Walkthrough</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Reference.html">Reference</a></li>
 </ul>
@@ -153,19 +153,33 @@
             
   <div class="section" id="getting-started">
 <h1>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h1>
-<p>These CPS macros are made with <cite>AutoHotKey &lt;https://www.autohotkey.com/&gt;</cite> – an open source Windows macro utility that’s over 15 years old. Our macros we built to automate small/frequent pain points for CPS users. Some of the macros have been in production use for 5 years. The CPS macros were more systematically developed for FCN in 2019 using CPS 12.2. Brief testing with 12.3 shows that they work with that version, too. There were dozens of other macros over time. The current macros are the highlights because they are more generally useful for us and relatively easy for users to learn.</p>
+<p>These CPS macros are made with <a class="reference external" href="https://www.autohotkey.com/">AutoHotKey</a> – an open source Windows macro utility that’s over 15 years old. Our macros we built to automate small/frequent pain points for CPS users. Some of the macros have been in production use for 5 years. The CPS macros were more systematically developed for FCN in 2019 using CPS 12.2. Brief testing with 12.3 shows that they work with that version, too. There were dozens of other macros over time. The current macros are the highlights because they are more generally useful for us and relatively easy for users to learn.</p>
+<a class="reference internal image-reference" href="_images/welcome-splashscreen.png"><img alt="_images/welcome-splashscreen.png" class="align-center" src="_images/welcome-splashscreen.png" style="width: 467px; height: 97px;" /></a>
 <p>These are provided as is – if something changes in CPS versions, it could make a step in a macro not work. At FCN, we run CPS on Windows Server and client software is accessed through Citrix. If a macro isn’t working on your CPS, you can try fixing it by looking at the source code. The main code file is ‘FCN-Macros-Beta.ahk’.</p>
 <p>These macros can be installed two ways:</p>
 <ul class="simple">
-<li><p>On the server for CPS (for when using Citrix like at FCN). In this approach you’d create a custom command for your users to click that would open the ‘FCN-Macros-Beta.exe’</p></li>
-<li><p>or locally on a Windows computer.</p></li>
+<li><p>locally on a Windows computer.</p></li>
+<li><p>or on the server for CPS (say, when using Citrix like at FCN).</p></li>
 </ul>
 <p>It’s most reliable if the Macros live in the same computer as the CPS client software. You could install it locally on a Windows computer and access through Citrix. Say, to test it out. But that changes the speed and accuracy of certain steps for macros and decreases reliability. For example, imagine you download this to your laptop and start the macros there. If you log into Citrix to open CPS, it might not work a reliably.</p>
+<p>So if you just want to try it out, feel free to open it on on your desktop. But if you’re actually deploying this for your organization, you’ll probably want to put it on the server if you use citrix.</p>
+<div class="section" id="local-installation">
+<h2>Local Installation<a class="headerlink" href="#local-installation" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><p>Download files and double click on FCN-Hotkeys-Beta.exe</p></li>
+<li><p>The software asks one question: who’s your buddy. It’s the person you route updates to the most.</p></li>
+<li><p>You should be ready to start a walkthrough of key features.</p></li>
+</ul>
+</div>
 <div class="section" id="installation-on-server">
 <h2>Installation on Server<a class="headerlink" href="#installation-on-server" title="Permalink to this headline">¶</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>I’m <em>not</em> an IT provider so these directions are vague.</p>
+</div>
 <ul class="simple">
 <li><p>Put files on a jboss server or something like that.</p></li>
-<li><p>Create a quicktext to launch (if you’d like to keep it hidden from CPS users until you’ve tested it out.) We use this to as a quicktext named .alphatest to launch our test version. Note the escaped backslashes and adjust for your setup.</p></li>
+<li><p>Create a quicktext to launch (if you’d like to keep it hidden from CPS users until you’ve tested it out.) We use this to as a quicktext named .alphatest to launch our test version. This allows us to have a place to adjust macros without touching the production one. Note the escaped backslashes and adjust for your setup.</p></li>
 </ul>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="n">runshellopen</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\\\</span><span class="s2">fcnjboss01.fcn.net</span><span class="se">\\</span><span class="s2">ahk$</span><span class="se">\\</span><span class="s2">alpha-test.exe&quot;</span><span class="p">)}</span>
 </pre></div>
@@ -173,19 +187,16 @@
 <ul class="simple">
 <li><p>Create a Custom Command on the Toolbar for users to launch</p></li>
 <li><p>The script saves a preference of a ‘buddy’ – it will be in the same folder as the script by default. At FCN we use a separate folder on the server. This can be set in the ‘setup() function’.</p></li>
+<li><p>By default, the logging/telemetry features are disabled. The macro will create preferences and a log-file when it starts.</p></li>
 </ul>
 </div>
-<div class="section" id="local-installation">
-<h2>Local Installation<a class="headerlink" href="#local-installation" title="Permalink to this headline">¶</a></h2>
-<ul class="simple">
-<li><p>Download files and double click on FCN-Hotkeys-Beta.exe</p></li>
-</ul>
+<div class="section" id="making-it-your-own">
+<h2>Making it your own<a class="headerlink" href="#making-it-your-own" title="Permalink to this headline">¶</a></h2>
+<p>Feel free to make this your own. Maybe you’d like to change the splashscreen or tray icon. Just replace the image files in the files folder with your own.</p>
+<p>We use CPOE Appends and Phone Notes the most at FCN. So we have those automated – if you use a different form for clinical communication, search the code file for CPOE to get started.</p>
+<p>If you’re interested in knowing specific coordinates (say for a button to click), the AU3_Spy.exe application shows you all the details that Autohotkey can detect.</p>
+<p>Open up <a class="reference external" href="https://www.autohotkey.com/">AutoHotKey’s Website</a> and look through the documentation as you’re trying to figure parts out.</p>
 </div>
-</div>
-<div class="section" id="first-use">
-<h1>First Use<a class="headerlink" href="#first-use" title="Permalink to this headline">¶</a></h1>
-<p>We have some logging that we use at FCN so we can troubleshoot. It’s disabled by default other than creating the files that are used.</p>
-<p>The first time through, a user needs to set their ‘buddy’ – the person or desktop that they hold updates to the most.</p>
 </div>
 
 
