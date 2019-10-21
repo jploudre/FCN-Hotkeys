@@ -1,0 +1,11 @@
+Use This:,To Do This:
+` (Backtick),Swaps back to Chart
+F1,Open Orders to Search Field
+F2 (single tap),Open Update Medications Window
+F2 (double tap),Open New Medications Window to Reference Search
+F3 (single tap),Opens Update Problems Window
+F3 (double tap),Opens New Problem window
+\ (single tap),Opens End Update Window
+\ (double tap},Holds Update to Buddy
+Control-Spacebar,"Ends Update, Removes Routing, Signs, Goes back to Chart Desktop"
+Alt-C,Goes to CPOE Form

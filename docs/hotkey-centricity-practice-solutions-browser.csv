@@ -1,0 +1,6 @@
+Use This:,To Do This:
+\ ,Closes Document without Signing
+Spacebar (single),Browser Page Down
+Spacebar (double),"Closes Document, Signs it"
+C,"Closed Document, Appends it with a CPOE Append"
+Control-Spacebar,"Closes Document, Signs it. (Same as double Spacebar)"
